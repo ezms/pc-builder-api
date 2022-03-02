@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 
 from sqlalchemy import Column, ForeignKey, Integer, String
 
@@ -16,5 +16,8 @@ class AddressModel(db.Model):
     public_place = Column(String(60), nullable=False)
     number = Column(Integer, nullable=False)
 
-    order_id = Column(Integer, ForeignKey("orders.id"))
-    user_id = Column(Integer, ForeignKey("users.id"))
+    order_id = Column(Integer, ForeignKey("orders.order_id"))
+    user_id = Column(Integer, ForeignKey("users.user_id"))
+
+    def asdict(self):
+        return asdict(self)
