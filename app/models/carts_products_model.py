@@ -7,7 +7,7 @@ from app.core.database import db
 
 @dataclass
 class CartsProductsModel(db.Model):
-    __tablename__ = "carts"
+    __tablename__ = "carts_products"
 
     cart_product_id: int = Column(Integer, primary_key=True)
     cart_id: int = Column(Integer, ForeignKey("carts.cart_id"), nullable=False)
