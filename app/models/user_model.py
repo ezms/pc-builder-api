@@ -21,3 +21,5 @@ class UserModel(db.Model):
     addresses: list = relationship(
         "AddressModel", secondary="users_addresses", backref=backref("users")
     )
+
+    orders: list = relationship("OrdersModel", backref=backref("user", uselist=False))
