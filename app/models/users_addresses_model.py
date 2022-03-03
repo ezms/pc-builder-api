@@ -1,5 +1,7 @@
 from dataclasses import dataclass
+
 from sqlalchemy import Column, ForeignKey, Integer, String
+
 from app.core.database import db
 
 
