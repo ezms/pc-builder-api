@@ -1,22 +1,23 @@
 from dataclasses import dataclass
 
+from sqlalchemy.orm import relationship, backref
+
 from sqlalchemy import Column, Integer, String
 
 from app.core.database import db
 
 
 @dataclass
-class User(db.Model):
-    user_id: int
-    name: str
-    email: str
-    password: str
-    cpf: str
+class UserModel(db.Model):
 
     __tablename__ = "users"
 
-    user_id = Column(Integer, primary_key=True)
-    name = Column(String(), nullable=False)
-    email = Column(String(), unique=True, nullable=False)
-    password = Column(String(100), nullable=False)
-    cpf = Column(String(11), nullable=False, unique=True)
+    user_id: int = Column(Integer, primary_key=True)
+    name: str = Column(String(), nullable=False)
+    email: str = Column(String(), unique=True, nullable=False)
+    password: str = Column(String(100), nullable=False)
+    cpf: str = Column(String(11), nullable=False, unique=True)
+
+    addresses: list = relationship(
+        "AddressModel", secondary="users_addresses", backref=backref("users")
+    )

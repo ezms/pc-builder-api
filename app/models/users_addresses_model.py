@@ -1,12 +1,12 @@
 from dataclasses import dataclass
 
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer
 
 from app.core.database import db
 
 
 @dataclass
-class UserAddress(db.Model):
+class UserAddressModel(db.Model):
     user_address_id: int
     address_id: int
     user_id: int
