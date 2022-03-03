@@ -1,8 +1,5 @@
 from flask import Blueprint, Flask
-<<<<<<< HEAD
-=======
 from app.routes.address_routes import bp_address
->>>>>>> develop
 
 blueprint = Blueprint("api", __name__, url_prefix="/")
 
