@@ -26,13 +26,13 @@ class ProductModel(db.Model):
         "CategoryModel", backref=backref("products", uselist=True), uselist=False
     )
     cart = relationship(
-        "CartModel",
+        "CartsModel",
         secondary="carts_products",
         backref=backref("products", uselist=True),
         uselist=False,
     )
     order = relationship(
-        "OrderModel",
+        "OrdersModel",
         secondary="orders_products",
         backref=backref("products", uselist=True),
         uselist=False,

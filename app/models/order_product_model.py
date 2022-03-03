@@ -6,7 +6,7 @@ from app.core.database import db
 
 
 @dataclass
-class OrdersModel(db.Model):
+class OrdersProductsModel(db.Model):
     __tablename__ = "orders_products"
 
     order_product_id: int = Column(Integer, primary_key=True)

@@ -9,10 +9,11 @@ db = SQLAlchemy()
 
 
 def init_app(app: Flask):
-    models.get_models()
 
     app.config["SQLALCHEMY_DATABASE_URI"] = getenv("DATABASE_URI")
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     db.init_app(app)
     app.db = db
+
+    models.get_models()

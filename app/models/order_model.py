@@ -13,7 +13,8 @@ class OrdersModel(db.Model):
     total: float = Column(Float, nullable=False)
     timestamp: str = Column(DateTime, nullable=False)
 
-    user_id: int = Column(Integer, ForeignKey("users.user_id"), nullable=True)
+    user_id: int = Column(Integer, ForeignKey("users.user_id"), nullable=False)
+    address_id = Column(Integer, ForeignKey("addresses.address_id"), nullable=False)
 
     def asdict(self):
         return asdict(self)
