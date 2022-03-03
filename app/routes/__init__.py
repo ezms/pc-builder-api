@@ -3,6 +3,7 @@ from flask import Blueprint, Flask
 
 from app.routes.order_routes import bp as bp_order
 from app.routes.address_routes import bp_address
+from app.routes.cart_routes import bp as bp_cart
 
 
 blueprint = Blueprint("api", __name__, url_prefix="/")
@@ -13,5 +14,6 @@ def init_app(app: Flask):
 
     blueprint.register_blueprint(bp_order)
     blueprint.register_blueprint(bp_address)
+    blueprint.register_blueprint(bp_cart)
 
     app.register_blueprint(blueprint)
