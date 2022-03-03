@@ -30,3 +30,6 @@ def create_category():
 
     except KeyError:
         return {"Error": "Missing the following key: name!"}, 409
+    
+    except TypeError:
+        return {"Error": "The valid key is only name!"}, 409
