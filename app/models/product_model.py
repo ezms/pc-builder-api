@@ -1,6 +1,7 @@
 from dataclasses import asdict, dataclass
 
 from sqlalchemy import Column, Float, ForeignKey, Integer, String, Text
+from sqlalchemy.orm import backref, relationship
 
 from app.core.database import db
 
@@ -20,3 +21,19 @@ class ProductModel(db.Model):
 
     def asdict(self):
         return asdict(self)
+
+    category = relationship(
+        "CategoryModel", backref=backref("products", uselist=True), uselist=False
+    )
+    cart = relationship(
+        "CartModel",
+        secondary="carts_products",
+        backref=backref("products", uselist=True),
+        uselist=False,
+    )
+    order = relationship(
+        "OrderModel",
+        secondary="orders_products",
+        backref=backref("products", uselist=True),
+        uselist=False,
+    )
