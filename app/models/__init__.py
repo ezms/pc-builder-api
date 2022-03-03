@@ -6,5 +6,5 @@ def get_models():
     from app.models.carts_model import CartsModel
     from app.models.order_product_model import OrdersModel
     from app.models.address_model import AddressModel
-    from app.models.user_model import User
-    from app.models.users_addresses_model import UserAddress
+    from app.models.user_model import UserModel
+    from app.models.users_addresses_model import UserAddressModel
