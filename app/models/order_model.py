@@ -1,7 +1,9 @@
-from sqlalchemy import Column, Float, DateTime, ForeignKey, Integer
 from dataclasses import asdict, dataclass
 
+from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer
+
 from app.core.database import db
+
 
 @dataclass
 class OrdersModel(db.Model):
