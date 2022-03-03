@@ -1,10 +1,8 @@
 from flask import Blueprint
 
+from app.controllers import category_controllers
+
 bp = Blueprint("blueprint_category", __name__, url_prefix="/categories")
-
-
-def create_category():
-    ...
 
 
 def get_categories():
@@ -23,7 +21,7 @@ def delete_category():
     ...
 
 
-bp.post("")(create_category)
+bp.post("")(category_controllers.create_category)
 bp.get("")(get_categories)
 bp.get("/<int:category_id>")(get_category_by_id)
 bp.patch("/<int:category_id>")(update_category)
