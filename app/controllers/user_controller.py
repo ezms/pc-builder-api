@@ -1,12 +1,12 @@
 from datetime import timedelta
 from http import HTTPStatus
 
-from flask import jsonify, request, session
+import sqlalchemy
+from flask import jsonify, request
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 from psycopg2.errors import UniqueViolation
-import sqlalchemy
 from sqlalchemy.exc import DataError, IntegrityError
-from sqlalchemy.orm import Query, Session
+from sqlalchemy.orm import Query
 
 from app.core.database import db
 from app.models.carts_model import CartsModel
