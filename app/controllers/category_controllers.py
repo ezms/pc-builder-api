@@ -44,3 +44,12 @@ def get_all_categories():
     categories = CategoryModel.query.all()
 
     return jsonify(categories), HTTPStatus.OK
+
+def get_category_by_id(id):
+    session = db.session
+
+    category = CategoryModel.query.filter_by(category_id=id).one_or_none()
+    if category == None:
+        return {"Error": "Category not founded!"}, HTTPStatus.NOT_FOUND
+
+    return jsonify(category), HTTPStatus.OK
