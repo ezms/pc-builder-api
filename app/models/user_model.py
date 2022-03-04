@@ -17,7 +17,7 @@ class UserModel(db.Model):
     user_id: int = Column(Integer, primary_key=True)
     name: str = Column(String(), nullable=False)
     email: str = Column(String(), unique=True, nullable=False)
-    password_hash: str = Column(String(100), nullable=False)
+    password_hash: str = Column(String(), nullable=False)
     cpf: str = Column(String(11), nullable=False, unique=True)
 
     addresses: list = relationship(
