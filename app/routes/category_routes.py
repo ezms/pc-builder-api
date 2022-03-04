@@ -15,5 +15,5 @@ def delete_category():
 bp.post("")(category_controllers.create_category)
 bp.get("")(category_controllers.get_all_categories)
 bp.get("/<int:id>")(category_controllers.get_category_by_id)
-bp.patch("/<int:id>")(update_category)
+bp.patch("/<int:id>")(category_controllers.update_category)
 bp.delete("/<int:id>")(delete_category)
