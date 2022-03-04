@@ -1,10 +1,8 @@
 from flask import Blueprint
 
+from app.controllers import user_controller
+
 bp = Blueprint("blueprint_user", __name__, url_prefix="/user")
-
-
-def create_user():
-    ...
 
 
 def get_user():
@@ -27,7 +25,7 @@ def register():
     ...
 
 
-bp.post("")(create_user)
+bp.post("/register")(user_controller.create_user)
 bp.get("")(get_user)
 bp.patch("")(update_user)
 bp.delete("")(delete_user)
