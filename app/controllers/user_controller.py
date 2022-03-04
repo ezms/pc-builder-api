@@ -11,10 +11,15 @@ def login():
 
     data = request.get_json()
 
+    missing_fields = [x for x in ["email", "password"] if x not in data.keys()]
+
+    if missing_fields:
+        return {"missing fields": missing_fields}, 400
+
     email = data.get("email")
     password = data.get("password")
 
-    user: UserModel = UserModel.query.filter_by(email=email).first()
+    user: UserModel = UserModel.query.filter_by(email=email.lower()).first()
 
     if not user:
         return {"error": "email not found"}, 404
