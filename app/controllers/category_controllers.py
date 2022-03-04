@@ -1,4 +1,5 @@
 from http import HTTPStatus
+from unicodedata import category
 
 from flask import jsonify, request
 from psycopg2.errors import UniqueViolation
@@ -72,3 +73,16 @@ def update_category(id):
     session.commit()
 
     return jsonify(category), HTTPStatus.OK
+
+
+def delete_category(id):
+    session = db.session
+
+    category = CategoryModel.query.filter_by(category_id=id).one_or_none()
+    if category == None:
+        return {"Error": "Category not founded!"}, HTTPStatus.NOT_FOUND
+
+    session.delete(category)
+    session.commit()
+
+    return "", HTTPStatus.NO_CONTENT
