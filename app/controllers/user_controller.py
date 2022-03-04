@@ -5,8 +5,10 @@ from flask import jsonify, request
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 from psycopg2.errors import UniqueViolation
 from sqlalchemy.exc import DataError, IntegrityError
+from sqlalchemy.orm import Query
 
 from app.core.database import db
+from app.models.carts_model import CartsModel
 from app.models.user_model import UserModel
 
 
@@ -23,6 +25,20 @@ def create_user():
 
         db.session.add(user)
         db.session.commit()
+
+        user_query: Query = (
+            db.session.query(UserModel.user_id)
+            .filter(UserModel.cpf.like(data["cpf"]))
+            .one()
+        )
+
+        cart_user_id = user_query.user_id
+
+        cart = CartsModel(user_id=cart_user_id)
+
+        db.session.add(cart)
+        db.session.commit()
+
     except IntegrityError as e:
         if isinstance(e.orig, UniqueViolation):
             return {"error": "'email' or 'cpf' already exists!"}, HTTPStatus.CONFLICT

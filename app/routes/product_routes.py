@@ -1,28 +1,18 @@
 from flask import Blueprint
 
-from app.controllers import product_controllers
+from app.controllers.product_controllers import (
+    create_product,
+    delete_product,
+    get_all_products,
+    get_product_by_id,
+    update_product,
+)
 
 bp = Blueprint("products", __name__, url_prefix="/products")
 
 
-def get_products():
-    ...
-
-
-def get_product_by_id():
-    ...
-
-
-def update_product():
-    ...
-
-
-def delete_product():
-    ...
-
-
-bp.post("")(product_controllers.create_product)
-bp.get("")(get_products)
-bp.get("<int:product_id>")(get_product_by_id)
-bp.patch("<int:product_id>")(update_product)
-bp.delete("<int:product_id>")(delete_product)
+bp.post("")(create_product)
+bp.get("")(get_all_products)
+bp.get("<int:id>")(get_product_by_id)
+bp.patch("<int:id>")(update_product)
+bp.delete("<int:id>")(delete_product)
