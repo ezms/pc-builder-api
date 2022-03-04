@@ -15,9 +15,9 @@ class UserModel(db.Model):
     __tablename__ = "users"
 
     user_id: int = Column(Integer, primary_key=True)
-    name: str = Column(String(), nullable=False)
-    email: str = Column(String(), unique=True, nullable=False)
-    password_hash: str = Column(String(), nullable=False)
+    name: str = Column(String, nullable=False)
+    email: str = Column(String, unique=True, nullable=False)
+    password_hash: str = Column(String, nullable=False)
     cpf: str = Column(String(11), nullable=False, unique=True)
 
     def asdict(self):
@@ -35,7 +35,7 @@ class UserModel(db.Model):
 
     @password.setter
     def password(self, password_to_hash):
-        self.password_hash = generate_password_hash(password_to_hash)
+        self.password_hash = generate_password_hash(password_to_hash, salt_length=14)
 
     def verify_password(self, password_to_compare):
         return check_password_hash(self.password_hash, password_to_compare)
