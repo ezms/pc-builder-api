@@ -1,10 +1,8 @@
 from flask import Blueprint
 
+from app.controllers import product_controllers
+
 bp = Blueprint("products", __name__, url_prefix="/products")
-
-
-def create_product():
-    ...
 
 
 def get_products():
@@ -23,7 +21,7 @@ def delete_product():
     ...
 
 
-bp.post("")(create_product)
+bp.post("")(product_controllers.create_product)
 bp.get("")(get_products)
 bp.get("<int:product_id>")(get_product_by_id)
 bp.patch("<int:product_id>")(update_product)
