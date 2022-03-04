@@ -5,12 +5,11 @@ from flask import jsonify, request
 from flask_jwt_extended import create_access_token
 from psycopg2.errors import UniqueViolation
 from sqlalchemy.exc import DataError, IntegrityError
+from sqlalchemy.orm import Query
 
 from app.core.database import db
 from app.models.carts_model import CartsModel
 from app.models.user_model import UserModel
-
-from sqlalchemy.orm import Query
 
 
 def create_user():
@@ -24,20 +23,18 @@ def create_user():
             cpf=data["cpf"],
         )
 
-        print('*'*100)
-        print(user)
-        print('*'*100)
-
         db.session.add(user)
         db.session.commit()
 
-        user_query: Query = db.session.query(UserModel.user_id).filter_by(UserModel.cpf.like(data["cpf"])).one()
+        user_query: Query = (
+            db.session.query(UserModel.user_id)
+            .filter(UserModel.cpf.like(data["cpf"]))
+            .one()
+        )
 
         cart_user_id = user_query.user_id
 
-        cart = CartsModel(
-            user_id = cart_user_id
-        )
+        cart = CartsModel(user_id=cart_user_id)
 
         db.session.add(cart)
         db.session.commit()
