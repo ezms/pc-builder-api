@@ -1,5 +1,7 @@
 from flask import Blueprint
 
+from app.controllers.user_controller import get_user_orders
+
 bp = Blueprint("blueprint_user", __name__, url_prefix="/user")
 
 
@@ -33,3 +35,4 @@ bp.patch("")(update_user)
 bp.delete("")(delete_user)
 bp.post("/login")(login)
 bp.post("/register")(register)
+bp.get("/orders")(get_user_orders)
