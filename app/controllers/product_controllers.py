@@ -60,3 +60,19 @@ def create_product():
 
     except TypeError:
         return {"Error": "The valid key is only model!"}, HTTPStatus.CONFLICT
+
+
+def get_all_products():
+
+    products = ProductModel.query.order_by(ProductModel.product_id).all()
+
+    return jsonify(products), HTTPStatus.OK
+
+
+def get_product_by_id(id):
+
+    product = ProductModel.query.filter_by(product_id=id).one_or_none()
+    if product == None:
+        return {"Error": "Product not founded!"}, HTTPStatus.NOT_FOUND
+
+    return jsonify(product), HTTPStatus.OK
