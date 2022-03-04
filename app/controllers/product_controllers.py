@@ -94,3 +94,16 @@ def update_product(id):
     session.commit()
 
     return jsonify(product), HTTPStatus.OK
+
+
+def delete_product(id):
+    session = db.session
+
+    product = ProductModel.query.filter_by(product_id=id).one_or_none()
+    if product == None:
+        return {"Error": "Product not founded!"}, HTTPStatus.NOT_FOUND
+
+    session.delete(product)
+    session.commit()
+
+    return "", HTTPStatus.NO_CONTENT
