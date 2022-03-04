@@ -2,7 +2,7 @@ from datetime import timedelta
 from http import HTTPStatus
 
 from flask import jsonify, request
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 from psycopg2.errors import UniqueViolation
 from sqlalchemy.exc import DataError, IntegrityError
 from sqlalchemy.orm import Query
@@ -89,3 +89,12 @@ def login():
         return {"access_token": access_token}
     else:
         return {"error": "invalid password"}, HTTPStatus.FORBIDDEN
+
+
+@jwt_required()
+def get_user():
+    current_user_token = request.headers.get("Authorization")
+    current_user = get_jwt_identity()
+    user = UserModel.query.get(current_user.get("user_id")).asdict()
+    user.pop("password_hash")
+    return jsonify(user)
