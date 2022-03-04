@@ -37,3 +37,19 @@ def create_category():
 
     except TypeError:
         return {"Error": "The valid key is only name!"}, HTTPStatus.CONFLICT
+
+def get_all_categories():
+    session = db.session
+
+    categories = CategoryModel.query.all()
+
+    return jsonify(categories), HTTPStatus.OK
+
+def get_category_by_id(id):
+    session = db.session
+
+    category = CategoryModel.query.filter_by(category_id=id).one_or_none()
+    if category == None:
+        return {"Error": "Category not founded!"}, HTTPStatus.NOT_FOUND
+
+    return jsonify(category), HTTPStatus.OK
