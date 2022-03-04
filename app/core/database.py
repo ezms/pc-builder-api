@@ -1,4 +1,5 @@
 from os import getenv
+from dotenv import load_dotenv
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -9,7 +10,7 @@ db = SQLAlchemy()
 
 
 def init_app(app: Flask):
-
+    load_dotenv()
     app.config["SQLALCHEMY_DATABASE_URI"] = getenv("DATABASE_URI")
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
