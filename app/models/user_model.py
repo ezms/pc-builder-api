@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -19,6 +19,9 @@ class UserModel(db.Model):
     email: str = Column(String(), unique=True, nullable=False)
     password_hash: str = Column(String(), nullable=False)
     cpf: str = Column(String(11), nullable=False, unique=True)
+
+    def asdict(self):
+        return asdict(self)
 
     addresses: list = relationship(
         "AddressModel", secondary="users_addresses", backref=backref("users")
