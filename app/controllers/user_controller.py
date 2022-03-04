@@ -105,23 +105,30 @@ def get_user():
     return jsonify(user)
     
 
-@jwt_required
+@jwt_required()
 def get_user_orders():
     orders = get_jwt_identity()['orders']
 
-    print('*'*100)
-    print(orders)
-    print('*'*100)
+    # print('*'*100)
+    # print(orders)
+    # print('*'*100)
 
     # return jsonify(orders), 200
 
 ############################################
 
-    user_id = get_jwt_identity()['id']
+    user_id = get_jwt_identity()['user_id']
 
-    order_query: Query = db.session.query(OrdersModel).filter(OrdersModel.user_id.like(user_id)).all()
+    user = UserModel.query.get(user_id).asdict()['orders']
+
+    # print('*'*100)
+    # print(user)
+    # print('*'*100)
 
 
-    print('*'*100)
-    print(order_query)
-    print('*'*100)
+    order_query: Query = db.session.query(OrdersModel).filter(OrdersModel.user_id == (user_id)).all()
+
+
+    # print('u'*100)
+    # print(order_query)
+    # print('*'*100)
