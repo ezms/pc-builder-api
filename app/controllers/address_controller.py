@@ -2,6 +2,7 @@ from http import HTTPStatus
 
 from flask import jsonify, request
 from flask_jwt_extended import get_jwt_identity, jwt_required
+from werkzeug.exceptions import NotFound
 
 from app.core.database import db
 from app.models.address_model import AddressModel
@@ -67,5 +68,21 @@ def get_address():
     return jsonify(query), HTTPStatus.OK
 
 
-def update_address():
-    ...
+@jwt_required()
+def update_address(address_id: int):
+    data = request.get_json()
+
+    try:
+        filtered_address = AddressModel.query.filter_by(
+            address_id=address_id
+        ).first_or_404()
+
+        for key, value in data.items():
+            setattr(filtered_address, key, value)
+
+        db.session.add(filtered_address)
+        db.session.commit()
+
+        return jsonify(filtered_address), HTTPStatus.OK
+    except NotFound as e:
+        return {"error": f"{e.description}"}, e.code

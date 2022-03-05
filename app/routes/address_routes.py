@@ -7,4 +7,4 @@ bp_address = Blueprint("blueprint_address", __name__, url_prefix="/address")
 
 bp_address.post("")(create_address)
 bp_address.get("")(get_address)
-bp_address.patch("")(update_address)
+bp_address.patch("/<int:address_id>")(update_address)
