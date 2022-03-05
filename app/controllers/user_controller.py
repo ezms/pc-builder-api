@@ -12,8 +12,17 @@ from app.models.carts_model import CartsModel
 from app.models.user_model import UserModel
 
 
-def create_user():
+def register():
     data = request.get_json()
+
+    wrong_types = [
+        key
+        for key, value in data.items()
+        if type(value) is not str and key in ["name", "email", "password", "cpf"]
+    ]
+
+    if wrong_types:
+        return {"error": "All the fields must be strings", "wrong_fields": wrong_types}
 
     try:
         user = UserModel(
@@ -57,7 +66,11 @@ def create_user():
             "missing_fields": missing_fields,
         }, HTTPStatus.UNPROCESSABLE_ENTITY
 
-    return jsonify(user), HTTPStatus.CREATED
+    user_asdict = user.asdict()
+    del user_asdict["password_hash"]
+    # user_asdict["cart"] = user.cart
+
+    return jsonify(user_asdict), HTTPStatus.CREATED
 
 
 def login():
