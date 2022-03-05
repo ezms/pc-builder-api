@@ -116,7 +116,10 @@ def login():
 def get_user():
     current_user_token = request.headers.get("Authorization")
     current_user = get_jwt_identity()
-    user = UserModel.query.get(current_user.get("user_id")).asdict()
+    try:
+        user = UserModel.query.get(current_user.get("user_id")).asdict()
+    except AttributeError:
+        return {"error": "User does not exists!"}, HTTPStatus.NOT_FOUND
     user.pop("password_hash")
     return jsonify(user)
 
