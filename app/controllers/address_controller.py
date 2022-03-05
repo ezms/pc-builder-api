@@ -86,3 +86,18 @@ def update_address(address_id: int):
         return jsonify(filtered_address), HTTPStatus.OK
     except NotFound as e:
         return {"error": f"{e.description}"}, e.code
+
+
+@jwt_required()
+def delete_address(address_id: int):
+    try:
+        filtered_address = AddressModel.query.filter_by(
+            address_id=address_id
+        ).first_or_404()
+
+        db.session.delete(filtered_address)
+        db.session.commit()
+
+        return {}, HTTPStatus.NO_CONTENT
+    except NotFound as e:
+        return {"error": f"{e.description}"}, e.code
