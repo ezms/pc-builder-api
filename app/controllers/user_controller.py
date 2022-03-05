@@ -102,14 +102,19 @@ def get_user():
     user.pop("password_hash")
     return jsonify(user)
 
+
 @jwt_required()
 def delete_user():
     try:
-        user_id = get_jwt_identity()['user_id']
+        user_id = get_jwt_identity()["user_id"]
 
-        user: Query = UserModel.query.get_or_404(user_id, description = "User not found on database!")
+        user: Query = UserModel.query.get_or_404(
+            user_id, description="User not found on database!"
+        )
 
-        cart: Query = CartsModel.query.filter_by(user_id=user_id).first_or_404(description = "User cart not found on database!")
+        cart: Query = CartsModel.query.filter_by(user_id=user_id).first_or_404(
+            description="User cart not found on database!"
+        )
 
         orders: Query = OrdersModel.query.filter_by(user_id=user_id).all()
 
@@ -121,7 +126,9 @@ def delete_user():
         for order in orders:
             order_id = order.order_id
 
-            order_product: Query = OrdersProductsModel.query.filter_by(order_id=order_id).all()
+            order_product: Query = OrdersProductsModel.query.filter_by(
+                order_id=order_id
+            ).all()
 
             for op in order_product:
                 db.session.delete(op)
@@ -133,6 +140,6 @@ def delete_user():
         db.session.commit()
 
         return {"msg": f"User {user.name} has been deleted from the database"}
-    
+
     except NotFound as err:
-        return {'error': err.description}, 404
+        return {"error": err.description}, 404
