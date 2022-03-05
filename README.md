@@ -90,29 +90,33 @@ GET /user
 Essa rota é usada para obter os dados do usuário que está logado, cadastrado no banco de dados. <br>
 Aqui não é necessário passar nenhum dado no corpo da requisição, apenas uma autorização do tipo bearer token, obtida no login do usuário.
 
-<!-- ### Atualização
+### Atualização
 
 PATCH /user
 
-Já a rota patch /leads pode ser usada para registrar a visita de um lead, aumentando em 1 o valor da coluna "visits" do lead no banco de dados. <br>
-No corpo da requisição deve ser passado apenas o email do lead a atualizar. <br>
+Já a rota patch /user pode ser usada para atualizar qualquer informação do usuário que está logado, bastando passar no corpo da requisição o dado a ser atualizado, e passar na autorização o bearer token do usuário logado, obtido no login <br>
 Exemplo de requisição:
 
 ```json
 {
-  "email": "john@email.com"
+  "email": "johndoe@email.com"
+}
+```
+
+Exemplo de resposta dessa rota:
+
+```json
+{
+  "name": "John Doe",
+  "email": "johndoe@email.com",
+  "password": "doe.john",
+  "cpf": "55555555555"
 }
 ```
 
 ### Deleção
 
-DELETE /leads <br/>
+DELETE /user <br/>
 
-Por último, a requisição DELETE /leads pode ser usada para deletar um lead específico do banco de dados, sendo necessário passar apenas o email no corpo da requisição. <br>
-Exemplo de requisição:
-
-```json
-{
-  "email": "john@email.com"
-}
-``` -->
+Por último, a requisição DELETE /user pode ser usada para deletar um usuário específico do banco de dados. <br>
+Aqui não é necessário passar nenhum dado no corpo da requisição, apenas uma autorização do tipo bearer token, obtida no login do usuário.
