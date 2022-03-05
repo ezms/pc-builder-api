@@ -1,10 +1,11 @@
 from http import HTTPStatus
 
-from flask import request
+from flask import jsonify, request
 from flask_jwt_extended import get_jwt_identity, jwt_required
 
 from app.core.database import db
 from app.models.address_model import AddressModel
+from app.models.user_model import UserModel
 from app.models.users_addresses_model import UserAddressModel
 
 
@@ -54,10 +55,16 @@ def create_address():
 @jwt_required()
 def get_address():
     current_user = get_jwt_identity()
-    print(get_jwt_identity())
 
-    query = db.session.query()
-    return {}, 200
+    query = (
+        db.session.query(AddressModel)
+        .select_from(AddressModel)
+        .join(UserAddressModel)
+        .join(UserModel)
+        .filter(UserAddressModel.user_id == current_user["user_id"])
+        .first()
+    )
+    return jsonify(query), HTTPStatus.OK
 
 
 def update_address():
