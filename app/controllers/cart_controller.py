@@ -66,3 +66,36 @@ def delete_cart(product_id):
         return {"msg": "Cart has been delete!"}, HTTPStatus.OK
     except NotFound as err:
         return {"err": err.description}, HTTPStatus.NOT_FOUND
+
+
+@jwt_required()
+def get_cart():
+    user_id = get_jwt_identity()["user_id"]
+    try:
+        cart: Query = CartsModel.query.filter_by(user_id=user_id).first_or_404(
+            description="Cart not found!"
+        )
+    except NotFound:
+        return {"error": "Cart does not exists!"}, HTTPStatus.NOT_FOUND
+
+    products: Query = (
+        db.session.query(
+            ProductModel.model,
+            ProductModel.price,
+            ProductModel.img,
+            ProductModel.description,
+            ProductModel.product_id,
+        )
+        .select_from(ProductModel)
+        .join(CartsProductsModel)
+        .join(CartsModel)
+        .filter(CartsProductsModel.cart_id == cart.cart_id)
+    )
+
+    column_names = [column["name"] for column in products.column_descriptions]
+
+    products = [dict(zip(column_names, prod)) for prod in products.all()]
+
+    cart_asdict = cart.asdict()
+    cart_asdict["products"] = products
+    return jsonify(cart_asdict), HTTPStatus.OK
