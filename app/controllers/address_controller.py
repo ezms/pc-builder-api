@@ -48,7 +48,7 @@ def create_address():
     except KeyError:
         return {
             "message": "Missing or invalid key(s)",
-            "required Keys": ["zip_code", "state", "city", "public_place", "number"],
+            "required keys": ["zip_code", "state", "city", "public_place", "number"],
             "recieved": list(data.keys()),
         }, HTTPStatus.BAD_REQUEST
 
@@ -73,17 +73,31 @@ def update_address(address_id: int):
     data = request.get_json()
 
     try:
+        address_data_factory = {
+            "zip_code": data["zip_code"],
+            "state": data["state"],
+            "city": data["city"],
+            "public_place": data["public_place"],
+            "number": data["number"],
+        }
+
         filtered_address = AddressModel.query.filter_by(
             address_id=address_id
         ).first_or_404()
 
-        for key, value in data.items():
+        for key, value in address_data_factory.items():
             setattr(filtered_address, key, value)
 
         db.session.add(filtered_address)
         db.session.commit()
 
         return jsonify(filtered_address), HTTPStatus.OK
+    except KeyError:
+        return {
+            "message": "Missing or invalid key(s)",
+            "required keys": ["zip_code", "state", "city", "public_place", "number"],
+            "recieved": list(data.keys()),
+        }, HTTPStatus.BAD_REQUEST
     except NotFound as e:
         return {"error": f"{e.description}"}, e.code
 
