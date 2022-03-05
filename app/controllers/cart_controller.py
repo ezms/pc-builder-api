@@ -1,11 +1,12 @@
 from http import HTTPStatus
+
 from flask import jsonify
-from flask_jwt_extended import jwt_required, get_jwt_identity
-from app.models.carts_model import CartsModel
-from app.models.user_model import UserModel
-from app.models.product_model import ProductModel
-from app.models.carts_products_model import CartsProductsModel
+from flask_jwt_extended import get_jwt_identity, jwt_required
+
 from app.core.database import db
+from app.models.carts_products_model import CartsProductsModel
+from app.models.product_model import ProductModel
+from app.models.user_model import UserModel
 
 
 @jwt_required()
@@ -23,21 +24,7 @@ def add_product_to_cart(product_id):
 
     cart_product = CartsProductsModel(cart_id=cart_id, product_id=product_id)
 
-    products = (
-        db.session.query(
-            ProductModel.model,
-            ProductModel.price,
-            ProductModel.img,
-            ProductModel.description,
-            ProductModel.product_id,
-        )
-        .select_from(ProductModel)
-        .join(CartsProductsModel)
-        .join(CartsModel)
-        .filter(CartsProductsModel.cart_id == cart_id)
-    )
-
-    cart_total = sum([prod[1] for prod in products.all()])
+    cart_total = user.cart.total + product.price
 
     user.cart.total = cart_total
 
