@@ -142,4 +142,4 @@ def delete_user():
         return {"msg": f"User {user.name} has been deleted from the database"}
 
     except NotFound as err:
-        return {"error": err.description}, 404
+        return {"error": err.description}, HTTPStatus.NOT_FOUND
