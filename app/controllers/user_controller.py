@@ -6,10 +6,14 @@ from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_requir
 from psycopg2.errors import UniqueViolation
 from sqlalchemy.exc import DataError, IntegrityError
 from sqlalchemy.orm import Query
+from werkzeug.exceptions import NotFound
 
 from app.core.database import db
 from app.models.carts_model import CartsModel
+from app.models.order_model import OrdersModel
+from app.models.order_product_model import OrdersProductsModel
 from app.models.user_model import UserModel
+from app.models.users_addresses_model import UserAddressModel
 
 
 def create_user():
@@ -24,7 +28,6 @@ def create_user():
         )
 
         db.session.add(user)
-        db.session.commit()
 
         user_query: Query = (
             db.session.query(UserModel.user_id)
@@ -98,3 +101,38 @@ def get_user():
     user = UserModel.query.get(current_user.get("user_id")).asdict()
     user.pop("password_hash")
     return jsonify(user)
+
+@jwt_required()
+def delete_user():
+    try:
+        user_id = get_jwt_identity()['user_id']
+
+        user: Query = UserModel.query.get_or_404(user_id, description = "User not found on database!")
+
+        cart: Query = CartsModel.query.filter_by(user_id=user_id).first_or_404(description = "User cart not found on database!")
+
+        orders: Query = OrdersModel.query.filter_by(user_id=user_id).all()
+
+        addressess: Query = UserAddressModel.query.filter_by(user_id=user_id).all()
+
+        for address in addressess:
+            db.session.delete(address)
+
+        for order in orders:
+            order_id = order.order_id
+
+            order_product: Query = OrdersProductsModel.query.filter_by(order_id=order_id).all()
+
+            for op in order_product:
+                db.session.delete(op)
+
+            db.session.delete(order)
+
+        db.session.delete(cart)
+        db.session.delete(user)
+        db.session.commit()
+
+        return {"msg": f"User {user.name} has been deleted from the database"}
+    
+    except NotFound as err:
+        return {'error': err.description}, 404

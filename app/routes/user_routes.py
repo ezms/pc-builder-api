@@ -1,7 +1,7 @@
 from flask import Blueprint
 from app.controllers import user_controller
 
-from app.controllers.user_controller import create_user
+from app.controllers.user_controller import create_user, delete_user
 
 
 bp = Blueprint("blueprint_user", __name__, url_prefix="/user")
@@ -12,10 +12,6 @@ bp = Blueprint("blueprint_user", __name__, url_prefix="/user")
 
 
 def update_user():
-    ...
-
-
-def delete_user():
     ...
 
 
