@@ -17,8 +17,17 @@ from app.models.user_model import UserModel
 from app.models.users_addresses_model import UserAddressModel
 
 
-def create_user():
+def register():
     data = request.get_json()
+
+    wrong_types = [
+        key
+        for key, value in data.items()
+        if type(value) is not str and key in ["name", "email", "password", "cpf"]
+    ]
+
+    if wrong_types:
+        return {"error": "All the fields must be strings", "wrong_fields": wrong_types}
 
     try:
         user = UserModel(
@@ -61,7 +70,15 @@ def create_user():
             "missing_fields": missing_fields,
         }, HTTPStatus.UNPROCESSABLE_ENTITY
 
-    return jsonify(user), HTTPStatus.CREATED
+    user_asdict = user.asdict()
+    del user_asdict["password_hash"]
+    user_asdict["cart"] = user.cart
+    user_asdict["cart"] = user_asdict["cart"].asdict()
+    del user_asdict["cart"]["cart_id"]
+    del user_asdict["cart"]["user_id"]
+    user_asdict["cart"]["products"] = user.cart.products
+
+    return jsonify(user_asdict), HTTPStatus.CREATED
 
 
 def login():
@@ -144,6 +161,7 @@ def delete_user():
 
     except NotFound as err:
         return {"error": err.description}, HTTPStatus.NOT_FOUND
+
 
 @jwt_required()
 def update_user():
