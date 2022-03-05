@@ -1,11 +1,13 @@
 from http import HTTPStatus
 
 from flask import request
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from app.core.database import db
 from app.models.address_model import AddressModel
 
 
+@jwt_required()
 def create_address():
     data = request.get_json()
     
@@ -37,8 +39,13 @@ def create_address():
     
 
 
+@jwt_required()
 def get_address():
-    ...
+    current_user = get_jwt_identity()
+    print(get_jwt_identity())
+
+    query = db.session.query()
+    return {}, 200
 
 def update_address():
     ...
