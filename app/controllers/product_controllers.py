@@ -8,6 +8,7 @@ from sqlalchemy.exc import IntegrityError
 from app.core.database import db
 from app.models.category_model import CategoryModel
 from app.models.product_model import ProductModel
+from app.services.products_services import populate_category, populate_product
 
 
 def create_product():
@@ -66,6 +67,12 @@ def create_product():
 def get_all_products():
 
     products = ProductModel.query.order_by(ProductModel.product_id).all()
+    print(products)
+    if products == []:
+        populate_category()
+        populate_product()
+        products = ProductModel.query.order_by(ProductModel.product_id).all()
+
 
     return jsonify(products), HTTPStatus.OK
 
