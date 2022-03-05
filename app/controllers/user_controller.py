@@ -1,6 +1,7 @@
 from datetime import timedelta
 from http import HTTPStatus
 
+import sqlalchemy
 from flask import jsonify, request
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 from psycopg2.errors import UniqueViolation
@@ -143,3 +144,42 @@ def delete_user():
 
     except NotFound as err:
         return {"error": err.description}, HTTPStatus.NOT_FOUND
+
+@jwt_required()
+def update_user():
+
+    data = request.get_json()
+
+    current_user = get_jwt_identity()
+    user = UserModel.query.get(current_user["user_id"])
+
+    data = {
+        key: val
+        for key, val in data.items()
+        if key in ["email", "password", "cpf", "name"]
+    }
+
+    user.name = data.get("name") or user.name
+    user.cpf = data.get("cpf") or user.cpf
+    user.email = data.get("email") or user.email
+
+    if data.get("password"):
+        user.password = data.get("password")
+
+    try:
+        db.session.commit()
+    except sqlalchemy.exc.IntegrityError as e:
+        db.session.close()
+        if isinstance(e.orig, UniqueViolation):
+            return (
+                jsonify({"error": e.args[0][e.args[0].find("Key") : -2]}),
+                HTTPStatus.CONFLICT,
+            )
+
+    user_dict = {
+        key: val
+        for key, val in user.asdict().items()
+        if key not in ["password_hash", "addresses", "orders"]
+    }
+
+    return jsonify(user_dict)
