@@ -1,3 +1,4 @@
+from datetime import datetime
 from http import HTTPStatus
 
 from flask import jsonify
@@ -8,8 +9,50 @@ from werkzeug.exceptions import NotFound
 from app.core.database import db
 from app.models.carts_model import CartsModel
 from app.models.carts_products_model import CartsProductsModel
+from app.models.order_model import OrdersModel
+from app.models.order_product_model import OrdersProductsModel
 from app.models.product_model import ProductModel
 from app.models.user_model import UserModel
+
+
+@jwt_required()
+def cart_checkout():
+    user = get_jwt_identity()
+    user = UserModel.query.get(user["user_id"])
+    address = user.addresses
+
+    if not address:
+        return {"error": "user must have an address"}, 400
+
+    cart_products = CartsProductsModel.query.filter_by(cart_id=user.cart.cart_id).all()
+
+    if not cart_products:
+        return {"error": "user's cart is empty"}, 400
+
+    new_order = OrdersModel(
+        user_id=user.user_id,
+        timestamp=datetime.now(),
+        address_id=address[0].address_id,
+        total=user.cart.total,
+    )
+
+    for product in cart_products:
+        order_product = OrdersProductsModel(product_id=product.product_id)
+        order_product.order = new_order
+        db.session.add(order_product)
+
+    actual_cart = (
+        db.session.query(CartsProductsModel).filter_by(cart_id=user.cart.cart_id).all()
+    )
+
+    for item in actual_cart:
+        db.session.delete(item)
+
+    user.cart.total = 0
+
+    db.session.commit()
+
+    return jsonify(new_order), HTTPStatus.CREATED
 
 
 @jwt_required()
