@@ -3,11 +3,12 @@ from http import HTTPStatus
 
 import sqlalchemy
 from flask import jsonify, request
-from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
+from flask_jwt_extended import (create_access_token, get_jwt_identity,
+                                jwt_required)
 from psycopg2.errors import UniqueViolation
 from sqlalchemy.exc import DataError, IntegrityError
 from sqlalchemy.orm import Query
-from werkzeug.exceptions import NotFound, ExpectationFailed
+from werkzeug.exceptions import ExpectationFailed, NotFound
 
 from app.core.database import db
 from app.models.carts_model import CartsModel
@@ -28,11 +29,12 @@ def register():
 
     if wrong_types:
         return {"error": "All the fields must be strings", "wrong_fields": wrong_types}
-    
 
     try:
-        if len(data['cpf']) != 11:
-            raise ExpectationFailed(description="'cpf' field must contain only 11 characters!")
+        if len(data["cpf"]) != 11:
+            raise ExpectationFailed(
+                description="'cpf' field must contain only 11 characters!"
+            )
 
         user = UserModel(
             name=data["name"].lower().title(),
@@ -64,9 +66,7 @@ def register():
             "error": "'cpf' field must contain only 11 characters!"
         }, HTTPStatus.BAD_REQUEST
     except ExpectationFailed as err:
-        return {
-            "error": err.description
-        }, HTTPStatus.BAD_REQUEST
+        return {"error": err.description}, HTTPStatus.BAD_REQUEST
     except KeyError:
         missing_fields = [
             field
