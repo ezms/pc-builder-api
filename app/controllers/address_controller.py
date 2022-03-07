@@ -2,7 +2,7 @@ from http import HTTPStatus
 
 from flask import jsonify, request
 from flask_jwt_extended import get_jwt_identity, jwt_required
-from werkzeug.exceptions import NotFound
+from werkzeug.exceptions import ExpectationFailed, NotFound
 
 from app.core.database import db
 from app.models.address_model import AddressModel
@@ -23,6 +23,11 @@ def create_address():
             return {
                 "error": "House number must be of Integer type!"
             }, HTTPStatus.BAD_REQUEST
+
+        if len(data["cep"]) != 8:
+            raise ExpectationFailed(
+                description="'cep' field must contain only 8 characters!"
+            )
 
         address_data_factory = {
             "zip_code": data["cep"],
@@ -51,6 +56,8 @@ def create_address():
             "required keys": ["zip_code", "state", "city", "public_place", "number"],
             "recieved": list(data.keys()),
         }, HTTPStatus.BAD_REQUEST
+    except ExpectationFailed as err:
+        return {"error": err.description}, HTTPStatus.BAD_REQUEST
 
 
 @jwt_required()
