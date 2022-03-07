@@ -27,7 +27,10 @@ def register():
     ]
 
     if wrong_types:
-        return {"error": "All the fields must be strings", "wrong_fields": wrong_types}
+        return {
+            "error": "All the fields must be strings",
+            "wrong_fields": wrong_types,
+        }, HTTPStatus.BAD_REQUEST
 
     try:
         user = UserModel(
