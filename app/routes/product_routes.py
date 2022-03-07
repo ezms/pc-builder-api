@@ -1,6 +1,6 @@
 from flask import Blueprint
 
-from app.controllers.product_controllers import (
+from app.controllers.product_controller import (
     create_product,
     delete_product,
     get_all_products,
