@@ -119,7 +119,8 @@ Exemplo de resposta dessa rota:
 DELETE /user <br/>
 
 Por último, a requisição DELETE /user pode ser usada para deletar um usuário específico do banco de dados. <br>
-Aqui não é necessário passar nenhum dado no corpo da requisição, apenas uma autorização do tipo bearer token, obtida no login do usuário.
+Aqui não é necessário passar nenhum dado no corpo da requisição, apenas uma autorização do tipo bearer token, obtida no login do usuário. <br>
+A requisição bem sucedida retorna a resposta 204, sem conteúdo.
 
 <br>
 
@@ -134,7 +135,7 @@ Exemplo de requisição:
 
 ```json
 {
-  "name": "Cigarrinhos Eletrônicos"
+  "name": "Processadores"
 }
 ```
 
@@ -143,7 +144,7 @@ Dessa requisição é esperado um retorno com os dados da categoria cadastrada, 
 ```json
 {
   "category_id": 1,
-  "name": "Cigarrinhos Eletrônicos"
+  "name": "Processadores"
 }
 ```
 
@@ -156,7 +157,7 @@ Aqui não é necessário passar nenhuma autorização, e nenhum dado no corpo da
 
 GET /categories/\<id\>
 
-Essa rota é usada para obter a categoria cadastrada referente ao id passado na url. <br>
+Essa rota é usada para obter a categoria referente ao id passado na url. <br>
 Aqui não é necessário passar nenhuma autorização, e nenhum dado no corpo da requisição.
 
 ### Atualização
@@ -169,7 +170,7 @@ Exemplo de requisição:
 
 ```json
 {
-  "name": "Batatinha Eletrônica"
+  "name": "Armazenamentos"
 }
 ```
 
@@ -178,7 +179,7 @@ Exemplo de resposta dessa rota:
 ```json
 {
   "category_id": 1,
-  "name": "Batatinha Eletrônica"
+  "name": "Armazenamentos"
 }
 ```
 
@@ -187,4 +188,87 @@ Exemplo de resposta dessa rota:
 DELETE /categories/<\id\>
 
 Por último, essa requisição pode ser usada para deletar uma categoria específica do banco de dados. <br>
-Aqui não é necessário passar nenhum dado no corpo da requisição, apenas a id da categoria na url da requisição.
+Aqui não é necessário passar nenhum dado no corpo da requisição, apenas a id da categoria na url da requisição. <br>
+A requisição bem sucedida retorna a resposta 204, sem conteúdo.
+
+<br>
+
+## Produtos
+
+### Registro
+
+POST /products
+
+Essa rota serve para registrar um novo produto no banco de dados, sendo obrigatório passar no corpo da requisição o model, img, price, description, e category do produto a registrar. <br>
+Exemplo de requisição:
+
+```json
+{
+  "model": "Processador AMD Ryzen 5 3600, AM4, 3.6GHz",
+  "img": "www.img.com.br",
+  "price": 1678.31,
+  "description": "Marca: AMD, Modelo: Ryzen 5 3600, Cores: 6, Threads: 12, Socket: AM4, Base Clock: 3.6, Cooler Box: Incluso, GPU Integrada: Não, Consumo: 65 Watts",
+  "category": "Processadores"
+}
+```
+
+Dessa requisição é esperado um retorno com os dados da categoria cadastrada, como mostrado a seguir:
+
+```json
+{
+  "product_id": 1,
+  "model": "Processador AMD Ryzen 5 3600, AM4, 3.6GHz",
+  "img": "www.img.com.br",
+  "price": 1678.31,
+  "description": "Marca: AMD, Modelo: Ryzen 5 3600, Cores: 6, Threads: 12, Socket: AM4, Base Clock: 3.6, Cooler Box: Incluso, GPU Integrada: Não, Consumo: 65 Watts"
+}
+```
+
+### Listagem
+
+GET /products
+
+Essa rota é usada para obter todos os produtos cadastrados no banco de dados. <br>
+Aqui não é necessário passar nenhuma autorização, e nenhum dado no corpo da requisição.
+
+GET /products/\<id\>
+
+Essa rota é usada para obter o produto referente ao id passado na url. <br>
+Aqui não é necessário passar nenhuma autorização, e nenhum dado no corpo da requisição.
+
+### Atualização
+
+PATCH /products/\<id\>
+
+Já essa rota pode ser usada para atualizar o as informações do produto referente ao id passado na url, bastando passar no corpo da requisição o dado a ser atualizado. <br>
+Aqui não é necessário passar nenhuma autorização, e nenhum dado no corpo da requisição. <br>
+Exemplo de requisição:
+
+```json
+{
+  "model": "Processador AMD Ryzen 7 5800X, AM4, 3.8GHz",
+  "description": "Marca: AMD, Modelo: Ryzen 7 5800X, Cores: 8, Threads: 16, Socket: AM4, Base Clock: 3.8, Cooler Box: Incluso, GPU Integrada: Não, Consumo: 105 Watts"
+}
+```
+
+Exemplo de resposta dessa rota:
+
+```json
+{
+  "product_id": 1,
+  "model": "Processador AMD Ryzen 7 5800X, AM4, 3.8GHz",
+  "img": "www.img.com.br",
+  "price": 1678.31,
+  "description": "Marca: AMD, Modelo: Ryzen 7 5800X, Cores: 8, Threads: 16, Socket: AM4, Base Clock: 3.8, Cooler Box: Incluso, GPU Integrada: Não, Consumo: 105 Watts"
+}
+```
+
+### Deleção
+
+DELETE /products/<\id\>
+
+Por último, essa requisição pode ser usada para deletar um produto específico do banco de dados. <br>
+Aqui não é necessário passar nenhum dado no corpo da requisição, apenas a id do produto na url da requisição. <br>
+A requisição bem sucedida retorna a resposta 204, sem conteúdo.
+
+<br>
