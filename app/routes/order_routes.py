@@ -1,13 +1,11 @@
 from flask import Blueprint
 
+from app.controllers.order_controller import get_orders
+
 bp = Blueprint("blueprint_order", __name__, url_prefix="/order")
 
 
 def create_order():
-    ...
-
-
-def get_orders():
     ...
 
 
