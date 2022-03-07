@@ -50,7 +50,11 @@ def cart_checkout():
 
     user.cart.total = 0
 
-    db.session.commit()
+    try:
+        db.session.commit()
+    except:
+        db.session.close()
+        raise
 
     return jsonify(new_order), HTTPStatus.CREATED
 
