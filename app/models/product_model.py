@@ -36,4 +36,5 @@ class ProductModel(db.Model):
         secondary="orders_products",
         backref=backref("products", uselist=True),
         uselist=False,
+        viewonly=True
     )
