@@ -4,7 +4,6 @@ from sqlalchemy.orm import Query
 
 from app.core.database import db
 from app.models.order_model import OrdersModel
-from app.models.user_model import UserModel
 
 
 @jwt_required()
