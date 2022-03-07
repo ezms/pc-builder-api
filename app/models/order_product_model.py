@@ -1,6 +1,7 @@
 from dataclasses import asdict, dataclass
 
 from sqlalchemy import Column, ForeignKey, Integer
+from sqlalchemy.orm import relationship
 
 from app.core.database import db
 
@@ -13,6 +14,8 @@ class OrdersProductsModel(db.Model):
 
     order_id: int = Column(Integer, ForeignKey("orders.order_id"), nullable=False)
     product_id: int = Column(Integer, ForeignKey("products.product_id"), nullable=False)
+
+    order = relationship("OrdersModel", uselist=False)
 
     def asdict(self):
         return asdict(self)
