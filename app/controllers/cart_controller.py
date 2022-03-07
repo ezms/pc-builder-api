@@ -117,7 +117,7 @@ def delete_cart(product_id):
         db.session.delete(product_cart)
         db.session.commit()
 
-        return {"msg": "Product has been delete from cart!"}, HTTPStatus.OK
+        return "", HTTPStatus.NO_CONTENT
     except NotFound as err:
         return {"error": err.description}, HTTPStatus.NOT_FOUND
 
