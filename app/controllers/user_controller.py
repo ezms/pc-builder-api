@@ -3,8 +3,7 @@ from http import HTTPStatus
 
 import sqlalchemy
 from flask import jsonify, request
-from flask_jwt_extended import (create_access_token, get_jwt_identity,
-                                jwt_required)
+from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 from psycopg2.errors import UniqueViolation
 from sqlalchemy.exc import DataError, IntegrityError
 from sqlalchemy.orm import Query
@@ -72,7 +71,6 @@ def register():
         }, HTTPStatus.UNPROCESSABLE_ENTITY
 
     user_asdict = user.asdict()
-    del user_asdict["password_hash"]
     user_asdict["cart"] = user.cart.asdict()
     user_asdict["cart"]["products"] = user.cart.products
 
@@ -112,13 +110,11 @@ def login():
 
 @jwt_required()
 def get_user():
-    current_user_token = request.headers.get("Authorization")
     current_user = get_jwt_identity()
     try:
         user = UserModel.query.get(current_user.get("user_id")).asdict()
     except AttributeError:
         return {"error": "User does not exists!"}, HTTPStatus.NOT_FOUND
-    user.pop("password_hash")
     return jsonify(user)
 
 

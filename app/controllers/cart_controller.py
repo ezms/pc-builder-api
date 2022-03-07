@@ -13,6 +13,7 @@ from app.models.order_model import OrdersModel
 from app.models.order_product_model import OrdersProductsModel
 from app.models.product_model import ProductModel
 from app.models.user_model import UserModel
+from app.services.products_query_services import get_all_products_query
 
 
 @jwt_required()
@@ -110,9 +111,9 @@ def delete_cart(product_id):
         db.session.delete(product_cart)
         db.session.commit()
 
-        return {"msg": "Cart has been delete!"}, HTTPStatus.OK
+        return {"msg": "Product has been delete from cart!"}, HTTPStatus.OK
     except NotFound as err:
-        return {"err": err.description}, HTTPStatus.NOT_FOUND
+        return {"error": err.description}, HTTPStatus.NOT_FOUND
 
 
 @jwt_required()
@@ -125,23 +126,9 @@ def get_cart():
     except NotFound:
         return {"error": "Cart does not exists!"}, HTTPStatus.NOT_FOUND
 
-    products: Query = (
-        db.session.query(
-            ProductModel.model,
-            ProductModel.price,
-            ProductModel.img,
-            ProductModel.description,
-            ProductModel.product_id,
-        )
-        .select_from(ProductModel)
-        .join(CartsProductsModel)
-        .join(CartsModel)
-        .filter(CartsProductsModel.cart_id == cart.cart_id)
+    products = get_all_products_query(
+        CartsModel, CartsProductsModel, CartsProductsModel.cart_id, cart.cart_id
     )
-
-    column_names = [column["name"] for column in products.column_descriptions]
-
-    products = [dict(zip(column_names, prod)) for prod in products.all()]
 
     cart_asdict = cart.asdict()
     cart_asdict["products"] = products

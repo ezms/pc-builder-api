@@ -1,23 +1,8 @@
 from flask import Blueprint
 
-from app.controllers.order_controller import get_orders
+from app.controllers.order_controller import get_order_by_id, get_orders
 
-bp = Blueprint("blueprint_order", __name__, url_prefix="/order")
+bp = Blueprint("blueprint_order", __name__, url_prefix="/orders")
 
-
-def create_order():
-    ...
-
-
-def update_orders():
-    ...
-
-
-def delete_orders():
-    ...
-
-
-bp.post("")(create_order)
 bp.get("")(get_orders)
-bp.patch("")(update_orders)
-bp.delete("")(delete_orders)
+bp.get("/<int:order_id>")(get_order_by_id)
