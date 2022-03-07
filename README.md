@@ -272,3 +272,61 @@ Aqui não é necessário passar nenhum dado no corpo da requisição, apenas a i
 A requisição bem sucedida retorna a resposta 204, sem conteúdo.
 
 <br>
+
+## Carrinho
+
+### Registro
+
+POST /cart/\<id\>
+
+Essa rota serve para registrar um novo produto no carrinho do usuário logado. <br>
+Aqui não é necessário passar nenhum dado no corpo da requisição, apenas uma autorização do tipo bearer token, obtida no login do usuário, e a id do produto a registrar no carrinho na url da requisição. <br>
+A requisição bem sucedida retorna o produto que foi adicionado ao carrinho. <br>
+Exemplo de resposta da requisição:
+
+```json
+{
+  "product_id": 2,
+  "model": "Processador AMD Ryzen 5 3600, AM4, 3.6GHz",
+  "img": "www.img.com.br",
+  "price": 1678.31,
+  "description": "Marca: AMD, Modelo: Ryzen 5 3600, Cores: 6, Threads: 12, Socket: AM4, Base Clock: 3.6, Cooler Box: Incluso, GPU Integrada: Não, Consumo: 65 Watts"
+}
+```
+
+### Listagem
+
+GET /cart
+
+Essa rota é usada para obter todos os produtos adicionados no carrinho do usuário logado. <br>
+Aqui não é necessário passar nenhum dado no corpo da requisição, apenas uma autorização do tipo bearer token, obtida no login do usuário. <br>
+Exemplo de resposta da requisição:
+
+```json
+{
+  "total": 1678.31,
+  "products": [
+    {
+      "model": "Processador AMD Ryzen 5 3600, AM4, 3.6GHz",
+      "price": 1678.31,
+      "img": "www.img.com.br",
+      "description": "Marca: AMD, Modelo: Ryzen 5 3600, Cores: 6, Threads: 12, Socket: AM4, Base Clock: 3.6, Cooler Box: Incluso, GPU Integrada: Não, Consumo: 65 Watts",
+      "product_id": 2
+    }
+  ]
+}
+```
+
+### Deleção
+
+DELETE /cart/<\id\>
+
+Por último, essa requisição pode ser usada para deletar um produto específico do carrinho. <br>
+Aqui não é necessário passar nenhum dado no corpo da requisição, apenas uma autorização do tipo bearer token, obtida no login do usuário, e a id do produto a registrar no carrinho na url da requisição. <br>
+A requisição retorna a seguinte mensagem, em caso de sucesso:
+
+```json
+{
+  "msg": "Cart has been delete!"
+}
+```
