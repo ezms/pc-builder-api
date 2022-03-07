@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="icon" href="../static/favicon.png" />
+        <meta name="theme-color" content="#000000" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename='css/style.css') }}"
+        />
+        <title>PC Builder API</title>
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+            table {
+                max-width: 500px;
+                width: 100%;
+            }
+            table, th, tr, td {
+                border: 1px solid #a7a7a7;
+                border-collapse: collapse;
+            }
+            td {
+                background: #212229;
+                color: #ffffff;
+                padding: 10px;
+            }
+            span {
+                margin: 20px 0;
+                display: block;
+            }
+
+            #banner {
+                margin: auto;
+                display: flex;
+            }
+
+            header {
+                background: #212229;
+                width: 100%;
+                max-width: 500px;
+                display: flex;
+                padding: 10px;
+                box-sizing: border-box;
+                border-radius: 8px;
+                color: white;
+                padding-right: 10px;
+            }
+
+            header img {
+                width: 100px;
+                height: 55px;
+                margin-right: 10px;
+            }
+
+            header h1 {
+                margin: 0;
+                line-height: 55px;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <div id="banner">
+                <img src="https://pc-builder-capstone-q2.vercel.app/static/media/logo.91001f55.png" alt="">
+                <h1 id="header-logo-title">PC Builder</h1>
+            </div>
+        </header>
+       <main>
+            <span>Olá, {{username}}, tudo bem?</span>
+            <span>Seu pedido já está em preparação e será enviado para o seguinte endereço:</span>
+            <ul>
+                {% for key, val in address.items() %}
+                    <li>{{key}} : {{val}}</li>
+                {% endfor %}
+            </ul>
+            <span>Abaixo seguem as informações do seu pedido efetuado em <strong>{{date}}</strong>:</span>
+            <table>
+                <tr>
+                    <th>Modelo</th>
+                    <th>Valor</th>
+                </tr>
+                {% for product in products %}
+                <tr>
+                    <td> {{product['model']}}</td>
+                    <td> {{product['price']}}</td>
+                </tr>
+                {% endfor %}
+            </table>
+            <h2>Total: {{total}}</h2>
+        </main>
+        <footer>
+            <span>Att, Equipe PC Builder</span>
+        </footer>
+    </body>
+</html>

@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from http import HTTPStatus
 
 from flask import jsonify
@@ -13,6 +13,7 @@ from app.models.order_model import OrdersModel
 from app.models.order_product_model import OrdersProductsModel
 from app.models.product_model import ProductModel
 from app.models.user_model import UserModel
+from app.services.email_service import send_email_to_client
 from app.services.products_query_services import get_all_products_query
 
 
@@ -32,7 +33,7 @@ def cart_checkout():
 
     new_order = OrdersModel(
         user_id=user.user_id,
-        timestamp=datetime.now(),
+        timestamp=datetime.now(timezone.utc) - timedelta(hours=3),
         address_id=address[0].address_id,
         total=user.cart.total,
     )
@@ -53,6 +54,11 @@ def cart_checkout():
 
     try:
         db.session.commit()
+        send_email_to_client(
+            address=address[0],
+            order_id=new_order.order_id,
+            date=new_order.timestamp,
+        )
     except:
         db.session.close()
         raise
