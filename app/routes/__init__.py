@@ -1,4 +1,4 @@
-from flask import Blueprint, Flask
+from flask import Blueprint, Flask, render_template
 
 from app.routes.address_routes import bp_address
 from app.routes.cart_routes import bp as bp_cart
@@ -12,6 +12,10 @@ blueprint = Blueprint("api", __name__, url_prefix="/")
 
 def init_app(app: Flask):
     app.config["JSON_SORT_KEYS"] = False
+
+    @blueprint.get("")
+    def home():
+        return render_template("base.html")
 
     blueprint.register_blueprint(bp_order)
     blueprint.register_blueprint(bp_address)

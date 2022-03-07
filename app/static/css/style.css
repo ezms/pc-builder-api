@@ -1,0 +1,286 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    outline: none;
+    font-family: "Oswald", sans-serif;
+}
+
+*::-webkit-scrollbar {
+    width: 7px;
+}
+
+*::-webkit-scrollbar-track {
+    background: var(--gray3);
+    border-radius: 20px;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: var(--secondary-color);
+    border-radius: 20px;
+}
+
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+    border: 0;
+    font-size: 100%;
+}
+
+ol,
+ul {
+    list-style: none;
+}
+
+h1 {
+    font-size: 26px;
+    font-weight: bold;
+    border: 0;
+}
+
+h2 {
+    font-size: 22px;
+    font-weight: bold;
+    border: 0;
+}
+
+h3 {
+    font-size: 18px;
+    font-weight: bold;
+    border: 0;
+}
+
+a {
+    font-family: inherit;
+    text-decoration: none;
+}
+
+a:hover {
+    cursor: pointer;
+}
+
+:root {
+    --primary-color: #f47b7b;
+    --secondary-color: #76f3c3;
+    --gray4: #212229;
+    --gray3: #545c6b;
+    --gray2: #858c9f;
+    --gray1: #f5f5f5;
+    --gradient-1: linear-gradient(90deg, #ff55bb 0%, #ff4343 100%);
+    --gradient-2: linear-gradient(90deg, #21b1b8 0%, #76f3c6 100%);
+}
+
+body {
+    color: var(--gray1);
+    min-height: 100vh;
+    height: 100%;
+    padding: 0 16px;
+    background-color: var(--gray4);
+}
+
+header {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+header img {
+    margin-top: 5px;
+    width: 70px;
+}
+
+main .main-title {
+    display: grid;
+    place-content: center;
+    font-size: 60px;
+    line-height: 89px;
+    margin: 60px 0;
+}
+
+.section-strip {
+    min-width: 275px;
+    max-width: 1500px;
+    height: 70px;
+    background-color: var(--secondary-color);
+    display: grid;
+    place-items: center;
+    margin: 20px auto;
+    color: var(--gray4);
+}
+
+.section-strip-title {
+    font-size: 36px;
+}
+
+.section-content-pcbuilder {
+    height: 50px;
+    margin-top: 40px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.link-button {
+    width: 35%;
+    height: 50px;
+    background: var(--gradient-1);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+    display: grid;
+    place-content: center;
+    text-align: center;
+    min-width: 125px;
+}
+
+.link-button:hover {
+    background-color: transparent;
+    border: solid 2px transparent;
+    background-image: linear-gradient(var(--gray4), var(--gray4)),
+        radial-gradient(circle at top left, #ff55bb, #ff4343);
+    background-origin: border-box;
+    background-clip: content-box, border-box;
+}
+
+.section-devs {
+    margin: 25px 0;
+    border-top: 2px solid var(--gray2);
+}
+
+.section-title {
+    font-size: 36px;
+    text-align: center;
+    margin: 36px 0;
+}
+
+.section-content-devs {
+    max-width: 784px;
+    margin: 0 auto;
+}
+
+.section-content-container {
+    display: flex;
+    gap: 60px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+li {
+    text-align: center;
+}
+
+li > img {
+    width: 200px;
+}
+
+li > h4 {
+    font-size: 22px;
+}
+
+.contacts-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+}
+
+.link-button-linkedin {
+    width: 85px;
+    height: 40px;
+    background: var(--gradient-2);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+    display: grid;
+    place-content: center;
+    text-align: center;
+}
+
+.link-button-linkedin:hover {
+    background-color: transparent;
+    border: solid 2px transparent;
+    background-origin: border-box;
+    background-clip: content-box, border-box;
+    background-image: linear-gradient(var(--gray4), var(--gray4)),
+        radial-gradient(circle at top left, #21b1b8, #76f3c6);
+}
