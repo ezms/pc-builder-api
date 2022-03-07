@@ -1,9 +1,14 @@
+from http import HTTPStatus
+
 from flask import jsonify
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from sqlalchemy.orm import Query
+from werkzeug.exceptions import NotFound
 
 from app.core.database import db
 from app.models.order_model import OrdersModel
+from app.models.order_product_model import OrdersProductsModel
+from app.models.product_model import ProductModel
 
 
 @jwt_required()
@@ -16,3 +21,36 @@ def get_orders():
     )
 
     return jsonify(order_query), 200
+
+
+@jwt_required()
+def get_order_by_id(order_id):
+    try:
+        order: Query = OrdersModel.query.filter_by(order_id=order_id).first_or_404(
+            description="Order not found!"
+        )
+    except NotFound:
+        return {"error": "Order does not exists!"}, HTTPStatus.NOT_FOUND
+
+    products: Query = (
+        db.session.query(
+            ProductModel.model,
+            ProductModel.price,
+            ProductModel.img,
+            ProductModel.description,
+            ProductModel.product_id,
+        )
+        .select_from(ProductModel)
+        .join(OrdersProductsModel)
+        .join(OrdersModel)
+        .filter(OrdersProductsModel.order_id == order.order_id)
+    )
+
+    column_names = [column["name"] for column in products.column_descriptions]
+
+    products = [dict(zip(column_names, prod)) for prod in products.all()]
+
+    order_asdict = order.asdict()
+    order_asdict["products"] = products
+
+    return jsonify(order_asdict), HTTPStatus.OK
