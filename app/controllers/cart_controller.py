@@ -33,7 +33,7 @@ def cart_checkout():
 
     new_order = OrdersModel(
         user_id=user.user_id,
-        timestamp=datetime.now(timezone.utc),
+        timestamp=datetime.now(timezone.utc) - timedelta(hours=3),
         address_id=address[0].address_id,
         total=user.cart.total,
     )
