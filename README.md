@@ -120,3 +120,71 @@ DELETE /user <br/>
 
 Por último, a requisição DELETE /user pode ser usada para deletar um usuário específico do banco de dados. <br>
 Aqui não é necessário passar nenhum dado no corpo da requisição, apenas uma autorização do tipo bearer token, obtida no login do usuário.
+
+<br>
+
+## Categoria
+
+### Registro
+
+POST /categories
+
+Essa rota serve para registrar uma nova categoria no banco de dados, sendo obrigatório passar no corpo da requisição o nome da categoria a registrar. <br>
+Exemplo de requisição:
+
+```json
+{
+  "name": "Cigarrinhos Eletrônicos"
+}
+```
+
+Dessa requisição é esperado um retorno com os dados da categoria cadastrada, como mostrado a seguir:
+
+```json
+{
+  "category_id": 1,
+  "name": "Cigarrinhos Eletrônicos"
+}
+```
+
+### Listagem
+
+GET /categories
+
+Essa rota é usada para obter as categorias cadastradas no banco de dados. <br>
+Aqui não é necessário passar nenhuma autorização, e nenhum dado no corpo da requisição.
+
+GET /categories/\<id\>
+
+Essa rota é usada para obter a categoria cadastrada referente ao id passado na url. <br>
+Aqui não é necessário passar nenhuma autorização, e nenhum dado no corpo da requisição.
+
+### Atualização
+
+PATCH /categories/\<id\>
+
+Já essa rota pode ser usada para atualizar o nome da categoria referente ao id passado na url, bastando passar no corpo da requisição o dado a ser atualizado. <br>
+Aqui não é necessário passar nenhuma autorização, e nenhum dado no corpo da requisição. <br>
+Exemplo de requisição:
+
+```json
+{
+  "name": "Batatinha Eletrônica"
+}
+```
+
+Exemplo de resposta dessa rota:
+
+```json
+{
+  "category_id": 1,
+  "name": "Batatinha Eletrônica"
+}
+```
+
+### Deleção
+
+DELETE /categories/<\id\>
+
+Por último, essa requisição pode ser usada para deletar uma categoria específica do banco de dados. <br>
+Aqui não é necessário passar nenhum dado no corpo da requisição, apenas a id da categoria na url da requisição.
