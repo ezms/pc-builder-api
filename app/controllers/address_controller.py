@@ -57,15 +57,18 @@ def create_address():
 def get_address():
     current_user = get_jwt_identity()
 
-    query = (
-        db.session.query(AddressModel)
-        .select_from(AddressModel)
-        .join(UserAddressModel)
-        .join(UserModel)
-        .filter(UserAddressModel.user_id == current_user["user_id"])
-        .first()
-    )
-    return jsonify(query), HTTPStatus.OK
+    try:
+        query = (
+            db.session.query(AddressModel)
+            .select_from(AddressModel)
+            .join(UserAddressModel)
+            .join(UserModel)
+            .filter(UserAddressModel.user_id == current_user["user_id"])
+            .first_or_404()
+        )
+        return jsonify(query), HTTPStatus.OK
+    except NotFound as e:
+        return {"error": f"{e.description}"}, e.code
 
 
 @jwt_required()
@@ -91,7 +94,7 @@ def update_address(address_id: int):
         db.session.add(filtered_address)
         db.session.commit()
 
-        return jsonify(filtered_address), HTTPStatus.OK
+        return {}, HTTPStatus.NO_CONTENT
     except KeyError:
         return {
             "message": "Missing or invalid key(s)",
