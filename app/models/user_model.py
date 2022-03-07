@@ -17,7 +17,7 @@ class UserModel(db.Model):
     user_id: int = Column(Integer, primary_key=True)
     name: str = Column(String, nullable=False)
     email: str = Column(String, unique=True, nullable=False)
-    password_hash: str = Column(String, nullable=False)
+    password_hash = Column(String, nullable=False)
     cpf: str = Column(String(11), nullable=False, unique=True)
 
     def asdict(self):
@@ -29,7 +29,7 @@ class UserModel(db.Model):
 
     orders: list = relationship("OrdersModel", backref=backref("user", uselist=False))
 
-    cart: dict = relationship("CartsModel", uselist=False)
+    cart = relationship("CartsModel", uselist=False)
 
     @property
     def password(self):
