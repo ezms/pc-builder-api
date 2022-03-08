@@ -1,5 +1,4 @@
 from http import HTTPStatus
-from unicodedata import category
 
 from flask import jsonify, request
 from psycopg2.errors import UniqueViolation
@@ -16,7 +15,7 @@ def create_category():
     try:
 
         if not type(data["name"]) == str:
-            return {"Error": "The value must be string!"}, HTTPStatus.BAD_REQUEST
+            return {"error": "The value must be string!"}, HTTPStatus.BAD_REQUEST
 
         data["name"] = data["name"].title()
 
@@ -29,7 +28,7 @@ def create_category():
 
     except IntegrityError as error:
         if isinstance(error.orig, UniqueViolation):
-            return {"Error": "Category already exists!"}, HTTPStatus.CONFLICT
+            return {"error": "Category already exists!"}, HTTPStatus.CONFLICT
 
     except KeyError:
         return {
@@ -37,7 +36,7 @@ def create_category():
         }, HTTPStatus.UNPROCESSABLE_ENTITY
 
     except TypeError:
-        return {"Error": "The valid key is only name!"}, HTTPStatus.CONFLICT
+        return {"error": "The valid key is only name!"}, HTTPStatus.CONFLICT
 
 
 def get_all_categories():
@@ -53,7 +52,7 @@ def get_category_by_id(id):
 
     category = CategoryModel.query.filter_by(category_id=id).one_or_none()
     if category == None:
-        return {"Error": "Category not founded!"}, HTTPStatus.NOT_FOUND
+        return {"error": "Category not found!"}, HTTPStatus.NOT_FOUND
 
     return jsonify(category), HTTPStatus.OK
 
@@ -64,7 +63,7 @@ def update_category(id):
 
     category = CategoryModel.query.filter_by(category_id=id).one_or_none()
     if category == None:
-        return {"Error": "Category not founded!"}, HTTPStatus.NOT_FOUND
+        return {"error": "Category not found!"}, HTTPStatus.NOT_FOUND
 
     for key, value in data.items():
         setattr(category, key, value)
@@ -80,7 +79,7 @@ def delete_category(id):
 
     category = CategoryModel.query.filter_by(category_id=id).one_or_none()
     if category == None:
-        return {"Error": "Category not founded!"}, HTTPStatus.NOT_FOUND
+        return {"error": "Category not found!"}, HTTPStatus.NOT_FOUND
 
     session.delete(category)
     session.commit()
