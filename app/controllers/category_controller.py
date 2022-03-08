@@ -65,6 +65,13 @@ def update_category(id):
     session = db.session
     data = request.get_json()
 
+    token = request.headers["Authorization"].split(" ")[1]
+
+    if not token:
+        return {"error": "missing admin token"}, HTTPStatus.BAD_REQUEST
+    elif token != os.getenv("DATABASE_ADMIN_TOKEN"):
+        return {"error": "invalid admin token"}, HTTPStatus.FORBIDDEN
+
     try:
         validate_body(data, name=str)
 
