@@ -1,10 +1,10 @@
 from datetime import timedelta
 from http import HTTPStatus
-from multiprocessing.sharedctypes import Value
 
 import sqlalchemy
 from flask import jsonify, request
-from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
+from flask_jwt_extended import (create_access_token, get_jwt_identity,
+                                jwt_required)
 from psycopg2.errors import UniqueViolation
 from sqlalchemy.exc import DataError, IntegrityError
 from sqlalchemy.orm import Query
@@ -152,7 +152,7 @@ def delete_user():
         db.session.delete(user)
         db.session.commit()
 
-        return {"msg": f"User {user.name} has been deleted from the database"}
+        return "", HTTPStatus.NO_CONTENT
 
     except NotFound as err:
         return {"error": err.description}, HTTPStatus.NOT_FOUND
