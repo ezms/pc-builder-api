@@ -51,13 +51,16 @@ Dessa requisição é esperado um retorno com os dados do usuário cadastrado, c
 
 ```json
 {
-  "user_id": 5,
+  "user_id": 1,
   "name": "John Doe",
   "email": "john@email.com",
-  "password_hash": "pbkdf2:sha256:260000$a0LpL92dua8fES$8e027780e2970bd91a7b1dc984af8fbe87d7cc83a8701fa7699ca99a6665a1ce",
   "cpf": "55555555555",
   "addresses": [],
-  "orders": []
+  "orders": [],
+  "cart": {
+    "total": 0.0,
+    "products": []
+  }
 }
 ```
 
@@ -88,7 +91,19 @@ Dessa requisição é esperado um retorno com o token de acesso do usuário, com
 GET /user
 
 Essa rota é usada para obter os dados do usuário que está logado, cadastrado no banco de dados. <br>
-Aqui não é necessário passar nenhum dado no corpo da requisição, apenas uma autorização do tipo bearer token, obtida no login do usuário.
+Aqui não é necessário passar nenhum dado no corpo da requisição, apenas uma autorização do tipo bearer token, obtida no login do usuário. <br>
+Exemplo de resposta dessa rota:
+
+```json
+{
+  "user_id": 1,
+  "name": "John Doe",
+  "email": "john@email.com",
+  "cpf": "55555555555",
+  "addresses": [],
+  "orders": []
+}
+```
 
 ### Atualização
 
@@ -212,7 +227,7 @@ Exemplo de requisição:
 }
 ```
 
-Dessa requisição é esperado um retorno com os dados da categoria cadastrada, como mostrado a seguir:
+Dessa requisição é esperado um retorno com os dados do produto cadastrado, como mostrado a seguir:
 
 ```json
 {
@@ -240,7 +255,7 @@ Aqui não é necessário passar nenhuma autorização, e nenhum dado no corpo da
 
 PATCH /products/\<id\>
 
-Já essa rota pode ser usada para atualizar o as informações do produto referente ao id passado na url, bastando passar no corpo da requisição o dado a ser atualizado. <br>
+Já essa rota pode ser usada para atualizar as informações do produto referente ao id passado na url, bastando passar no corpo da requisição o dado a ser atualizado. <br>
 Aqui não é necessário passar nenhuma autorização, e nenhum dado no corpo da requisição. <br>
 Exemplo de requisição:
 
@@ -330,3 +345,84 @@ A requisição retorna a seguinte mensagem, em caso de sucesso:
   "msg": "Cart has been delete!"
 }
 ```
+
+<br>
+
+## Endereços
+
+### Registro
+
+POST /address
+
+Essa rota serve para registrar um novo endereço ao usuário logado, sendo obrigatório passar no corpo da requisição o cep, cidade, estado, logradouro, e numero do endereço a registrar, além de uma autorização do tipo bearer token, obtida no login do usuário. <br>
+Exemplo de requisição:
+
+```json
+{
+  "cep": "20221410",
+  "cidade": "Rio de Janeiro",
+  "estado": "RJ",
+  "logradouro": "Rua Alexandre Mackenzie",
+  "numero": 15
+}
+```
+
+Dessa requisição é esperado um retorno com os dados do endereço cadastrado, como mostrado a seguir:
+
+```json
+{
+  "zip_code": "20221410",
+  "state": "RJ",
+  "city": "Rio de Janeiro",
+  "public_place": "Rua Alexandre Mackenzie",
+  "number": 15
+}
+```
+
+### Listagem
+
+GET /address
+
+Essa rota é usada para obter todos os endereços cadastrados para o usuário logado. <br>
+Aqui não é necessário passar nenhum dado no corpo da requisição, apenas uma autorização do tipo bearer token, obtida no login do usuário. <br>
+Exemplo de resposta dessa requisição:
+
+```json
+[
+  {
+    "address_id": 9,
+    "zip_code": "20221410",
+    "state": "RJ",
+    "city": "Rio de Janeiro",
+    "public_place": "Rua Alexandre Mackenzie",
+    "number": 15
+  }
+]
+```
+
+### Atualização
+
+PUT /address/\<id\>
+
+Já essa rota pode ser usada para atualizar as informações do endereço referente ao id passado na url, bastando passar no corpo da requisição o endereço inteiro a ser atualizado, com os campos obrigatórios zip_code, state, city, public_place e number. <br>
+Aqui também é necessário passar uma autorização do tipo bearer token, obtida no login do usuário. <br>
+Essa rota devolve a resposta 204 - sem conteúdo. <br>
+Exemplo de requisição:
+
+```json
+{
+  "zip_code": "20221410",
+  "state": "RJ",
+  "city": "Rio de Janeiro",
+  "public_place": "Rua Vinicius de Morais",
+  "number": 25
+}
+```
+
+### Deleção
+
+DELETE /address/<\id\>
+
+Por último, essa requisição pode ser usada para deletar um endereço específico cadastrado para o usuário logado. <br>
+Aqui não é necessário passar nenhum dado no corpo da requisição, apenas a id do produto na url da requisição e uma autorização do tipo bearer token, obtida no login do usuário. <br>
+A requisição bem sucedida retorna a resposta 204 - sem conteúdo.
