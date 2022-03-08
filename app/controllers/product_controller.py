@@ -73,7 +73,6 @@ def get_all_products():
         populate_product()
         products = ProductModel.query.order_by(ProductModel.product_id).all()
 
-
     return jsonify(products), HTTPStatus.OK
 
 
@@ -105,10 +104,9 @@ def update_product(id):
         session.commit()
 
         return jsonify(product), HTTPStatus.OK
-    
+
     except BadRequest as err:
         return {"error": err.description}, HTTPStatus.BAD_REQUEST
-    
 
 
 def delete_product(id):
