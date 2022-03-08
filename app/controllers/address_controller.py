@@ -1,4 +1,3 @@
-import re
 from http import HTTPStatus
 
 from flask import jsonify, request
@@ -134,7 +133,7 @@ def update_address(address_id: int):
         return {}, HTTPStatus.NO_CONTENT
 
     except BadRequest as e:
-        return e.description, HTTPStatus.BAD_REQUEST
+        return {"error": e.description}, e.code
     except NotFound as e:
         return {"error": f"{e.description}"}, e.code
     except ExpectationFailed as err:
