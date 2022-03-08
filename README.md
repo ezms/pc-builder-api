@@ -411,6 +411,24 @@ Exemplo de resposta da requisição:
 
 <br>
 
+<i> POST /cart/checkout <i>
+
+Essa rota apaga os produtos do carrinho do usuário, transferindo-os para os pedidos (orders) do usuário. <br>
+Aqui não é necessário passar nenhum dado no corpo da requisição, apenas uma autorização do tipo bearer token, obtida no login do usuário. <br>
+A requisição bem sucedida retorna o pedido (order) do usuário com o preço total, e a data do pedido. <br>
+Exemplo de resposta da requisição:
+
+```json
+{
+  "order_id": 2,
+  "total": 1678.31,
+  "timestamp": "Tue, 08 Mar 2022 12:09:43 GMT",
+  "user_id": 22
+}
+```
+
+<br>
+
 ### <b> Listagem </b>
 
 <i> GET /cart </i>
@@ -442,13 +460,7 @@ Exemplo de resposta da requisição:
 
 Por último, essa requisição pode ser usada para deletar um produto específico do carrinho. <br>
 Aqui não é necessário passar nenhum dado no corpo da requisição, apenas uma autorização do tipo bearer token, obtida no login do usuário, e a id do produto a registrar no carrinho na url da requisição. <br>
-A requisição retorna a seguinte mensagem, em caso de sucesso:
-
-```json
-{
-  "msg": "Cart has been delete!"
-}
-```
+A requisição bem sucedida retorna a resposta 204 - sem conteúdo.
 
 <br>
 
@@ -555,20 +567,22 @@ Essa rota é usada para obter todos os pedidos do usuário logado. <br>
 Aqui não é necessário passar nenhum dado no corpo da requisição, apenas uma autorização do tipo bearer token, obtida no login do usuário. <br>
 Exemplo de resposta dessa requisição:
 
-<!-- ```json
-{
-  "total": 1678.31,
-  "products": [
-    {
-      "model": "Processador AMD Ryzen 5 3600, AM4, 3.6GHz",
-      "price": 1678.31,
-      "img": "www.img.com.br",
-      "description": "Marca: AMD, Modelo: Ryzen 5 3600, Cores: 6, Threads: 12, Socket: AM4, Base Clock: 3.6, Cooler Box: Incluso, GPU Integrada: Não, Consumo: 65 Watts",
-      "product_id": 2
-    }
-  ]
-}
-``` -->
+```json
+[
+  {
+    "order_id": 1,
+    "total": 1678.31,
+    "timestamp": "Tue, 08 Mar 2022 12:06:22 GMT",
+    "user_id": 22
+  },
+  {
+    "order_id": 2,
+    "total": 1678.31,
+    "timestamp": "Tue, 08 Mar 2022 12:09:43 GMT",
+    "user_id": 22
+  }
+]
+```
 
 <i> GET /orders/\<id\> </i>
 
@@ -578,7 +592,10 @@ Exemplo de resposta dessa requisição:
 
 ```json
 {
+  "order_id": 1,
   "total": 1678.31,
+  "timestamp": "Tue, 08 Mar 2022 12:06:22 GMT",
+  "user_id": 22,
   "products": [
     {
       "model": "Processador AMD Ryzen 5 3600, AM4, 3.6GHz",
