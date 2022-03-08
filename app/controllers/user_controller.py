@@ -4,7 +4,8 @@ from multiprocessing.sharedctypes import Value
 
 import sqlalchemy
 from flask import jsonify, request
-from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
+from flask_jwt_extended import (create_access_token, get_jwt_identity,
+                                jwt_required)
 from psycopg2.errors import UniqueViolation
 from sqlalchemy.exc import DataError, IntegrityError
 from sqlalchemy.orm import Query
@@ -73,24 +74,34 @@ def register():
 
 
 def login():
-    try:
-        data = request.get_json()
-        validate_body(data, email=str, password=str)
 
-        email = data.get("email")
-        password = data.get("password")
+    data = request.get_json()
+    data = {key: val for key, val in data.items() if key in ["email", "password"]}
 
-        user: UserModel = UserModel.query.filter_by(email=email.lower()).first()
+    missing_fields = [x for x in ["email", "password"] if x not in data.keys()]
 
-        if user.verify_password(password):
-            access_token = create_access_token(
-                identity=user, expires_delta=timedelta(days=1)
-            )
-            return {"access_token": access_token}
-        else:
-            return {"error": "invalid password"}, HTTPStatus.FORBIDDEN
-    except BadRequest as err:
-        return err.description, HTTPStatus.BAD_REQUEST
+    if missing_fields:
+        return {"missing fields": missing_fields}, HTTPStatus.BAD_REQUEST
+
+    for key, val in data.items():
+        if type(val) is not str:
+            return {"error": f"{{{key}}} value must be string"}, HTTPStatus.BAD_REQUEST
+
+    email = data.get("email")
+    password = data.get("password")
+
+    user: UserModel = UserModel.query.filter_by(email=email.lower()).first()
+
+    if not user:
+        return {"error": "email not found"}, HTTPStatus.NOT_FOUND
+
+    if user.verify_password(password):
+        access_token = create_access_token(
+            identity=user, expires_delta=timedelta(days=1)
+        )
+        return {"access_token": access_token}
+    else:
+        return {"error": "invalid password"}, HTTPStatus.FORBIDDEN
 
 
 @jwt_required()

@@ -9,6 +9,7 @@ from app.core.database import db
 from app.models.category_model import CategoryModel
 from app.models.product_model import ProductModel
 from app.services.products_services import populate_category, populate_product
+from app.services.validate_body_service import validate_body
 
 
 def create_product():
@@ -70,7 +71,7 @@ def create_product():
 def get_all_products():
 
     products = ProductModel.query.order_by(ProductModel.product_id).all()
-    print(products)
+    
     if products == []:
         populate_category()
         populate_product()
@@ -95,6 +96,17 @@ def update_product(id):
     try:
         if not data:
             raise BadRequest(description="Request body cannot be empty")
+        
+        for key in data.keys():
+            if key == "price":
+                validate_body(data, price=int)
+            elif key == "model":
+                validate_body(data, model=str)
+            elif key == "img":
+                validate_body(data, img=str)
+            elif key == "description":
+                validate_body(data, description=str)
+        
 
         product = ProductModel.query.filter_by(product_id=id).one_or_none()
         if product == None:
