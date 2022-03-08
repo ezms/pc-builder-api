@@ -1,3 +1,4 @@
+import os
 from http import HTTPStatus
 
 from flask import jsonify, request
@@ -8,17 +9,21 @@ from werkzeug.exceptions import BadRequest, NotFound
 from app.core.database import db
 from app.models.category_model import CategoryModel
 from app.models.product_model import ProductModel
-from app.services.products_services import (
-    create_category,
-    populate_category,
-    populate_product,
-)
+from app.services.products_services import (create_category, populate_category,
+                                            populate_product)
 from app.services.validate_body_service import validate_body
 
 
 def create_product():
     session = db.session
     data = request.get_json()
+
+    token = request.headers["Authorization"].split(" ")[1]
+
+    if not token:
+        return {"error": "missing admin key"}, HTTPStatus.BAD_REQUEST
+    elif token != os.getenv("DATABASE_ADMIN_TOKEN"):
+        return {"error": "invalid admin token"}, HTTPStatus.FORBIDDEN
 
     try:
 
