@@ -21,7 +21,7 @@ def create_product():
     token = request.headers["Authorization"].split(" ")[1]
 
     if not token:
-        return {"error": "missing admin key"}, HTTPStatus.BAD_REQUEST
+        return {"error": "missing admin token"}, HTTPStatus.BAD_REQUEST
     elif token != os.getenv("DATABASE_ADMIN_TOKEN"):
         return {"error": "invalid admin token"}, HTTPStatus.FORBIDDEN
 
