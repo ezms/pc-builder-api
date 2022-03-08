@@ -188,6 +188,11 @@ def update_user():
         user.password = data.get("password")
 
     try:
+        if "cpf" in data.keys():
+            if len(data["cpf"]) != 11:
+                raise ExpectationFailed(
+                    description="'cpf' field must contain only 11 characters!"
+                )
         db.session.commit()
     except sqlalchemy.exc.IntegrityError as e:
         db.session.close()
@@ -196,6 +201,8 @@ def update_user():
                 jsonify({"error": e.args[0][e.args[0].find("Key") : -2]}),
                 HTTPStatus.CONFLICT,
             )
+    except ExpectationFailed as err:
+        return {"error": err.description}, HTTPStatus.BAD_REQUEST
 
     user_dict = {
         key: val
