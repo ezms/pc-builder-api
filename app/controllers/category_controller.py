@@ -94,6 +94,13 @@ def update_category(id):
 def delete_category(id):
     session = db.session
 
+    token = request.headers["Authorization"].split(" ")[1]
+
+    if not token:
+        return {"error": "missing admin token"}, HTTPStatus.BAD_REQUEST
+    elif token != os.getenv("DATABASE_ADMIN_TOKEN"):
+        return {"error": "invalid admin token"}, HTTPStatus.FORBIDDEN
+
     category = CategoryModel.query.filter_by(category_id=id).one_or_none()
     if category == None:
         return {"error": "Category not found!"}, HTTPStatus.NOT_FOUND
