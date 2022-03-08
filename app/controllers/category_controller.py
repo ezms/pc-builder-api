@@ -17,7 +17,9 @@ def create_category():
 
     token = request.headers["Authorization"].split(" ")[1]
 
-    if token != os.getenv("DATABASE_ADMIN_TOKEN"):
+    if not token:
+        return {"error": "missing admin token"}, HTTPStatus.BAD_REQUEST
+    elif token != os.getenv("DATABASE_ADMIN_TOKEN"):
         return {"error": "invalid admin token"}, HTTPStatus.FORBIDDEN
 
     try:
