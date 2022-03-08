@@ -497,3 +497,13 @@ def populate_product():
     products_to_add = [ProductModel(**product) for product in products]
     db.session.add_all(products_to_add)
     db.session.commit()
+
+def create_category(category):
+  session = db.session
+
+  data = {"name": category}
+
+  category_to_add = CategoryModel(**data)
+
+  session.add(category_to_add)
+  session.commit()
