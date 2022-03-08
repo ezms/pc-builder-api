@@ -1,9 +1,9 @@
 from http import HTTPStatus
-from http.client import OK
 
 from flask import jsonify, request
 from psycopg2.errors import UniqueViolation
 from sqlalchemy.exc import IntegrityError
+from werkzeug.exceptions import BadRequest, NotFound
 
 from app.core.database import db
 from app.models.category_model import CategoryModel
@@ -18,15 +18,15 @@ def create_product():
     try:
 
         if not type(data["model"]) == str:
-            return {"Error": "The model must be string!"}, HTTPStatus.BAD_REQUEST
+            return {"error": "The model must be string!"}, HTTPStatus.BAD_REQUEST
         if not type(data["img"]) == str:
-            return {"Error": "The img must be string!"}, HTTPStatus.BAD_REQUEST
+            return {"error": "The img must be string!"}, HTTPStatus.BAD_REQUEST
         if not type(data["price"]) == float:
-            return {"Error": "The price must be float!"}, HTTPStatus.BAD_REQUEST
+            return {"error": "The price must be float!"}, HTTPStatus.BAD_REQUEST
         if not type(data["description"]) == str:
-            return {"Error": "The description must be string!"}, HTTPStatus.BAD_REQUEST
+            return {"error": "The description must be string!"}, HTTPStatus.BAD_REQUEST
         if not type(data["category"]) == str:
-            return {"Error": "The category must be string!"}, HTTPStatus.BAD_REQUEST
+            return {"error": "The category must be string!"}, HTTPStatus.BAD_REQUEST
 
         data["category"] = data["category"].title()
 
@@ -34,7 +34,7 @@ def create_product():
 
         category_model: CategoryModel = CategoryModel.query.filter_by(
             name=category
-        ).first()
+        ).first_or_404(description=f"Category '{category}' not found!")
 
         data["category_id"] = category_model.category_id
 
@@ -47,7 +47,7 @@ def create_product():
 
     except IntegrityError as error:
         if isinstance(error.orig, UniqueViolation):
-            return {"Error": "Product already exists!"}, HTTPStatus.CONFLICT
+            return {"error": "Product already exists!"}, HTTPStatus.CONFLICT
 
     except KeyError:
         missing_fields = [
@@ -61,7 +61,10 @@ def create_product():
         }, HTTPStatus.UNPROCESSABLE_ENTITY
 
     except TypeError:
-        return {"Error": "The valid key is only model!"}, HTTPStatus.CONFLICT
+        return {"error": "The valid key is only model!"}, HTTPStatus.CONFLICT
+
+    except NotFound as err:
+        return {"error": err.description}, HTTPStatus.NOT_FOUND
 
 
 def get_all_products():
@@ -73,7 +76,6 @@ def get_all_products():
         populate_product()
         products = ProductModel.query.order_by(ProductModel.product_id).all()
 
-
     return jsonify(products), HTTPStatus.OK
 
 
@@ -81,7 +83,7 @@ def get_product_by_id(id):
 
     product = ProductModel.query.filter_by(product_id=id).one_or_none()
     if product == None:
-        return {"Error": "Product not founded!"}, HTTPStatus.NOT_FOUND
+        return {"error": "Product not found!"}, HTTPStatus.NOT_FOUND
 
     return jsonify(product), HTTPStatus.OK
 
@@ -90,17 +92,24 @@ def update_product(id):
     session = db.session
     data = request.get_json()
 
-    product = ProductModel.query.filter_by(product_id=id).one_or_none()
-    if product == None:
-        return {"Error": "Product not founded!"}, HTTPStatus.NOT_FOUND
+    try:
+        if not data:
+            raise BadRequest(description="Request body cannot be empty")
 
-    for key, value in data.items():
-        setattr(product, key, value)
+        product = ProductModel.query.filter_by(product_id=id).one_or_none()
+        if product == None:
+            return {"error": "Product not found!"}, HTTPStatus.NOT_FOUND
 
-    session.add(product)
-    session.commit()
+        for key, value in data.items():
+            setattr(product, key, value)
 
-    return jsonify(product), HTTPStatus.OK
+        session.add(product)
+        session.commit()
+
+        return jsonify(product), HTTPStatus.OK
+
+    except BadRequest as err:
+        return {"error": err.description}, HTTPStatus.BAD_REQUEST
 
 
 def delete_product(id):
@@ -108,7 +117,7 @@ def delete_product(id):
 
     product = ProductModel.query.filter_by(product_id=id).one_or_none()
     if product == None:
-        return {"Error": "Product not founded!"}, HTTPStatus.NOT_FOUND
+        return {"error": "Product not found!"}, HTTPStatus.NOT_FOUND
 
     session.delete(product)
     session.commit()

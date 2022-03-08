@@ -1,7 +1,7 @@
 from flask import Flask
 
 from app import routes
-from app.core import database, migrations, jwt
+from app.core import database, migrations, jwt, email
 
 
 def create_app():
@@ -10,6 +10,7 @@ def create_app():
     database.init_app(app)
     migrations.init_app(app)
     jwt.init_app(app)
+    email.init_app(app)
     routes.init_app(app)
 
     return app

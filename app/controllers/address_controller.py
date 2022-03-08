@@ -2,7 +2,7 @@ from http import HTTPStatus
 
 from flask import jsonify, request
 from flask_jwt_extended import get_jwt_identity, jwt_required
-from werkzeug.exceptions import NotFound
+from werkzeug.exceptions import ExpectationFailed, NotFound
 
 from app.core.database import db
 from app.models.address_model import AddressModel
@@ -19,10 +19,26 @@ def create_address():
         if type(data["cep"]) != str:
             return {"error": "CEP must be of String(str) type!"}, HTTPStatus.BAD_REQUEST
 
+        if len(data["cep"]) != 8:
+            raise ExpectationFailed(
+                description="CEP field must contain only 8 characters!"
+            )
+
         if type(data["numero"]) != int:
             return {
                 "error": "House number must be of Integer type!"
             }, HTTPStatus.BAD_REQUEST
+
+        if type(data["cidade"]) != str:
+            raise ExpectationFailed(description="cidade must be of String(str) type!")
+
+        if type(data["estado"]) != str:
+            raise ExpectationFailed(description="estado must be of String(str) type!")
+
+        if type(data["logradouro"]) != str:
+            raise ExpectationFailed(
+                description="logradouro must be of String(str) type!"
+            )
 
         address_data_factory = {
             "zip_code": data["cep"],
@@ -51,6 +67,8 @@ def create_address():
             "required keys": ["zip_code", "state", "city", "public_place", "number"],
             "recieved": list(data.keys()),
         }, HTTPStatus.BAD_REQUEST
+    except ExpectationFailed as err:
+        return {"error": err.description}, HTTPStatus.BAD_REQUEST
 
 
 @jwt_required()
@@ -76,6 +94,28 @@ def update_address(address_id: int):
     data = request.get_json()
 
     try:
+        if type(data["zip_code"]) != str:
+            raise ExpectationFailed(description="zip_code must be of String(str) type!")
+
+        if len(data["zip_code"]) != 8:
+            raise ExpectationFailed(
+                description="zip_code field must contain only 8 characters!"
+            )
+
+        if type(data["number"]) != int:
+            raise ExpectationFailed(description="House number must be of Integer type!")
+
+        if type(data["city"]) != str:
+            raise ExpectationFailed(description="city must be of String(str) type!")
+
+        if type(data["state"]) != str:
+            raise ExpectationFailed(description="state must be of String(str) type!")
+
+        if type(data["public_place"]) != str:
+            raise ExpectationFailed(
+                description="public_place must be of String(str) type!"
+            )
+
         address_data_factory = {
             "zip_code": data["zip_code"],
             "state": data["state"],
@@ -103,6 +143,8 @@ def update_address(address_id: int):
         }, HTTPStatus.BAD_REQUEST
     except NotFound as e:
         return {"error": f"{e.description}"}, e.code
+    except ExpectationFailed as err:
+        return {"error": err.description}, HTTPStatus.BAD_REQUEST
 
 
 @jwt_required()
@@ -110,7 +152,7 @@ def delete_address(address_id: int):
     try:
         filtered_address = AddressModel.query.filter_by(
             address_id=address_id
-        ).first_or_404()
+        ).first_or_404(description="Address id not found on database!")
 
         db.session.delete(filtered_address)
         db.session.commit()
