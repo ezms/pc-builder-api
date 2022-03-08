@@ -3,9 +3,11 @@ from http import HTTPStatus
 from flask import jsonify, request
 from psycopg2.errors import UniqueViolation
 from sqlalchemy.exc import IntegrityError
+from werkzeug.exceptions import BadRequest
 
 from app.core.database import db
 from app.models.category_model import CategoryModel
+from app.services.validate_body_service import validate_body
 
 
 def create_category():
@@ -14,8 +16,7 @@ def create_category():
 
     try:
 
-        if not type(data["name"]) == str:
-            return {"error": "The value must be string!"}, HTTPStatus.BAD_REQUEST
+        validate_body(data, name=str)
 
         data["name"] = data["name"].title()
 
@@ -30,13 +31,8 @@ def create_category():
         if isinstance(error.orig, UniqueViolation):
             return {"error": "Category already exists!"}, HTTPStatus.CONFLICT
 
-    except KeyError:
-        return {
-            "Error": "Missing the following key: name!"
-        }, HTTPStatus.UNPROCESSABLE_ENTITY
-
-    except TypeError:
-        return {"error": "The valid key is only name!"}, HTTPStatus.CONFLICT
+    except BadRequest as err:
+        return {"error": err.description}, HTTPStatus.BAD_REQUEST
 
 
 def get_all_categories():
@@ -61,17 +57,23 @@ def update_category(id):
     session = db.session
     data = request.get_json()
 
-    category = CategoryModel.query.filter_by(category_id=id).one_or_none()
-    if category == None:
-        return {"error": "Category not found!"}, HTTPStatus.NOT_FOUND
+    try:
+        validate_body(data, name=str)
 
-    for key, value in data.items():
-        setattr(category, key, value)
+        category = CategoryModel.query.filter_by(category_id=id).one_or_none()
+        if category == None:
+            return {"error": "Category not found!"}, HTTPStatus.NOT_FOUND
 
-    session.add(category)
-    session.commit()
+        for key, value in data.items():
+            setattr(category, key, value)
 
-    return jsonify(category), HTTPStatus.OK
+        session.add(category)
+        session.commit()
+
+        return jsonify(category), HTTPStatus.OK
+        
+    except BadRequest as err:
+        return {"error": err.description}, HTTPStatus.BAD_REQUEST
 
 
 def delete_category(id):

@@ -3,13 +3,15 @@ from http import HTTPStatus
 
 import sqlalchemy
 from flask import jsonify, request
-from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
+from flask_jwt_extended import (create_access_token, get_jwt_identity,
+                                jwt_required)
 from psycopg2.errors import UniqueViolation
 from sqlalchemy.exc import DataError, IntegrityError
 from sqlalchemy.orm import Query
 from werkzeug.exceptions import BadRequest, ExpectationFailed, NotFound
 
 from app.core.database import db
+from app.models.address_model import AddressModel
 from app.models.carts_model import CartsModel
 from app.models.order_model import OrdersModel
 from app.models.order_product_model import OrdersProductsModel
@@ -72,24 +74,34 @@ def register():
 
 
 def login():
-    try:
-        data = request.get_json()
-        validate_body(data, email=str, password=str)
 
-        email = data.get("email")
-        password = data.get("password")
+    data = request.get_json()
+    data = {key: val for key, val in data.items() if key in ["email", "password"]}
 
-        user: UserModel = UserModel.query.filter_by(email=email.lower()).first()
+    missing_fields = [x for x in ["email", "password"] if x not in data.keys()]
 
-        if user.verify_password(password):
-            access_token = create_access_token(
-                identity=user, expires_delta=timedelta(days=1)
-            )
-            return {"access_token": access_token}
-        else:
-            return {"error": "invalid password"}, HTTPStatus.FORBIDDEN
-    except BadRequest as err:
-        return err.description, HTTPStatus.BAD_REQUEST
+    if missing_fields:
+        return {"missing fields": missing_fields}, HTTPStatus.BAD_REQUEST
+
+    for key, val in data.items():
+        if type(val) is not str:
+            return {"error": f"{{{key}}} value must be string"}, HTTPStatus.BAD_REQUEST
+
+    email = data.get("email")
+    password = data.get("password")
+
+    user: UserModel = UserModel.query.filter_by(email=email.lower()).first()
+
+    if not user:
+        return {"error": "email not found"}, HTTPStatus.NOT_FOUND
+
+    if user.verify_password(password):
+        access_token = create_access_token(
+            identity=user, expires_delta=timedelta(days=1)
+        )
+        return {"access_token": access_token}
+    else:
+        return {"error": "invalid password"}, HTTPStatus.FORBIDDEN
 
 
 @jwt_required()
@@ -98,7 +110,7 @@ def get_user():
     try:
         user = UserModel.query.get(current_user.get("user_id")).asdict()
     except AttributeError:
-        return {"error": "User does not exists!"}, HTTPStatus.NOT_FOUND
+        return {"error": "User not found on database!"}, HTTPStatus.NOT_FOUND
     return jsonify(user)
 
 
@@ -120,6 +132,8 @@ def delete_user():
         addressess: Query = UserAddressModel.query.filter_by(user_id=user_id).all()
 
         for address in addressess:
+            address_query: Query = AddressModel.query.get(address.address_id)
+            db.session.delete(address_query)
             db.session.delete(address)
 
         for order in orders:
@@ -138,7 +152,7 @@ def delete_user():
         db.session.delete(user)
         db.session.commit()
 
-        return {"msg": f"User {user.name} has been deleted from the database"}
+        return "", HTTPStatus.NO_CONTENT
 
     except NotFound as err:
         return {"error": err.description}, HTTPStatus.NOT_FOUND
@@ -146,7 +160,6 @@ def delete_user():
 
 @jwt_required()
 def update_user():
-
     data = request.get_json()
 
     try:
@@ -156,24 +169,49 @@ def update_user():
     except BadRequest as err:
         return {"error": err.description}, HTTPStatus.BAD_REQUEST
 
-    current_user = get_jwt_identity()
-    user = UserModel.query.get(current_user["user_id"])
-
-    data = {
-        key: val
-        for key, val in data.items()
-        if key in ["email", "password", "cpf", "name"]
-    }
-
-    user.name = data.get("name") or user.name
-    user.cpf = data.get("cpf") or user.cpf
-    user.email = data.get("email") or user.email
-
-    if data.get("password"):
-        user.password = data.get("password")
-
     try:
-        db.session.commit()
+        current_user = get_jwt_identity()
+        user = UserModel.query.get(current_user["user_id"])
+
+        data = {
+            key: val
+            for key, val in data.items()
+            if key in ["email", "password", "cpf", "name"]
+        }
+
+        for val in data.values():
+            if type(val) != str:
+                invalid_values = [key for key in data.keys() if type(data[key]) != str]
+                return {
+                    "error": {
+                        "available_fields": [
+                            "name type should be string",
+                            "email type should be string",
+                            "cpf type should be string",
+                            "password type should be string",
+                        ],
+                        "invalid_fields": invalid_values,
+                    }
+                }, HTTPStatus.BAD_REQUEST
+            user.name = data.get("name") or user.name
+            user.cpf = data.get("cpf") or user.cpf
+            user.email = data.get("email") or user.email
+
+        if data.get("password"):
+            user.password = data.get("password")
+
+            if "cpf" in data.keys():
+                if len(data["cpf"]) != 11:
+                    raise ExpectationFailed(
+                        description="'cpf' field must contain only 11 characters!"
+                    )
+            db.session.commit()
+
+        user_dict = {
+            key: val
+            for key, val in user.asdict().items()
+            if key not in ["password_hash", "addresses", "orders"]
+        }
     except sqlalchemy.exc.IntegrityError as e:
         db.session.close()
         if isinstance(e.orig, UniqueViolation):
@@ -181,11 +219,9 @@ def update_user():
                 jsonify({"error": e.args[0][e.args[0].find("Key") : -2]}),
                 HTTPStatus.CONFLICT,
             )
-
-    user_dict = {
-        key: val
-        for key, val in user.asdict().items()
-        if key not in ["password_hash", "addresses", "orders"]
-    }
+    except ExpectationFailed as err:
+        return {"error": err.description}, HTTPStatus.BAD_REQUEST
+    except AttributeError:
+        return {"error": "User not found on database!"}, HTTPStatus.NOT_FOUND
 
     return jsonify(user_dict)
