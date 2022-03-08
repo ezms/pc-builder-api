@@ -8,7 +8,11 @@ from werkzeug.exceptions import BadRequest, NotFound
 from app.core.database import db
 from app.models.category_model import CategoryModel
 from app.models.product_model import ProductModel
-from app.services.products_services import populate_category, populate_product
+from app.services.products_services import (
+    create_category,
+    populate_category,
+    populate_product,
+)
 from app.services.validate_body_service import validate_body
 
 
@@ -35,7 +39,13 @@ def create_product():
 
         category_model: CategoryModel = CategoryModel.query.filter_by(
             name=category
-        ).first_or_404(description=f"Category '{category}' not found!")
+        ).first()
+
+        if category_model == None:
+            create_category(category)
+            category_model: CategoryModel = CategoryModel.query.filter_by(
+                name=category
+            ).first()
 
         data["category_id"] = category_model.category_id
 
@@ -71,7 +81,7 @@ def create_product():
 def get_all_products():
 
     products = ProductModel.query.order_by(ProductModel.product_id).all()
-    
+
     if products == []:
         populate_category()
         populate_product()
@@ -96,7 +106,7 @@ def update_product(id):
     try:
         if not data:
             raise BadRequest(description="Request body cannot be empty")
-        
+
         for key in data.keys():
             if key == "price":
                 validate_body(data, price=int)
@@ -106,7 +116,6 @@ def update_product(id):
                 validate_body(data, img=str)
             elif key == "description":
                 validate_body(data, description=str)
-        
 
         product = ProductModel.query.filter_by(product_id=id).one_or_none()
         if product == None:
