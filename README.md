@@ -33,7 +33,7 @@ Para começar a utilizar a API Leads, copie a URL base da aplicação e use-a na
 
 ## <b> > Endpoints </b>
 
-<!-- Existem X endpoints nessa aplicação: X pra registro de usuário, X pra listagem dos usuários... -->
+Existem 24 endpoints nessa aplicação: 5 para gerenciamento de usuário, 5 para gerenciamento de categorias, 5 para gerenciamento de produtos, 3 para gerenciamento de carrinho, 4 para gerenciamento de endereços, 2 para gerenciamento de pedidos.
 
 <br>
 
