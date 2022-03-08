@@ -11,6 +11,7 @@ from sqlalchemy.orm import Query
 from werkzeug.exceptions import BadRequest, ExpectationFailed, NotFound
 
 from app.core.database import db
+from app.models.address_model import AddressModel
 from app.models.carts_model import CartsModel
 from app.models.order_model import OrdersModel
 from app.models.order_product_model import OrdersProductsModel
@@ -131,6 +132,8 @@ def delete_user():
         addressess: Query = UserAddressModel.query.filter_by(user_id=user_id).all()
 
         for address in addressess:
+            address_query: Query = AddressModel.query.get(address.address_id)
+            db.session.delete(address_query)
             db.session.delete(address)
 
         for order in orders:
