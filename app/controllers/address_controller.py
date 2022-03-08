@@ -28,17 +28,13 @@ def create_address():
             return {
                 "error": "House number must be of Integer type!"
             }, HTTPStatus.BAD_REQUEST
-        
+
         if type(data["cidade"]) != str:
-            raise ExpectationFailed(
-                description="cidade must be of String(str) type!"
-            )
-        
+            raise ExpectationFailed(description="cidade must be of String(str) type!")
+
         if type(data["estado"]) != str:
-            raise ExpectationFailed(
-                description="estado must be of String(str) type!"
-            )
-        
+            raise ExpectationFailed(description="estado must be of String(str) type!")
+
         if type(data["logradouro"]) != str:
             raise ExpectationFailed(
                 description="logradouro must be of String(str) type!"
@@ -99,9 +95,7 @@ def update_address(address_id: int):
 
     try:
         if type(data["zip_code"]) != str:
-            raise ExpectationFailed(
-                description="zip_code must be of String(str) type!"
-            )
+            raise ExpectationFailed(description="zip_code must be of String(str) type!")
 
         if len(data["zip_code"]) != 8:
             raise ExpectationFailed(
@@ -109,20 +103,14 @@ def update_address(address_id: int):
             )
 
         if type(data["number"]) != int:
-            raise ExpectationFailed(
-                description="House number must be of Integer type!"
-            )
+            raise ExpectationFailed(description="House number must be of Integer type!")
 
         if type(data["city"]) != str:
-            raise ExpectationFailed(
-                description="city must be of String(str) type!"
-            )
-        
+            raise ExpectationFailed(description="city must be of String(str) type!")
+
         if type(data["state"]) != str:
-            raise ExpectationFailed(
-                description="state must be of String(str) type!"
-            )
-        
+            raise ExpectationFailed(description="state must be of String(str) type!")
+
         if type(data["public_place"]) != str:
             raise ExpectationFailed(
                 description="public_place must be of String(str) type!"
