@@ -8,7 +8,7 @@ from flask_jwt_extended import (create_access_token, get_jwt_identity,
 from psycopg2.errors import UniqueViolation
 from sqlalchemy.exc import DataError, IntegrityError
 from sqlalchemy.orm import Query
-from werkzeug.exceptions import ExpectationFailed, NotFound
+from werkzeug.exceptions import BadRequest, ExpectationFailed, NotFound
 
 from app.core.database import db
 from app.models.carts_model import CartsModel
@@ -175,6 +175,13 @@ def delete_user():
 def update_user():
 
     data = request.get_json()
+
+    try:
+        if not data:
+            raise BadRequest(description="Request body cannot be empty")
+
+    except BadRequest as err:
+        return {"error": err.description}, HTTPStatus.BAD_REQUEST
 
     current_user = get_jwt_identity()
     user = UserModel.query.get(current_user["user_id"])
