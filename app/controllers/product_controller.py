@@ -1,9 +1,9 @@
 from http import HTTPStatus
-from http.client import OK
 
 from flask import jsonify, request
 from psycopg2.errors import UniqueViolation
 from sqlalchemy.exc import IntegrityError
+from werkzeug.exceptions import BadRequest
 
 from app.core.database import db
 from app.models.category_model import CategoryModel
@@ -90,17 +90,25 @@ def update_product(id):
     session = db.session
     data = request.get_json()
 
-    product = ProductModel.query.filter_by(product_id=id).one_or_none()
-    if product == None:
-        return {"Error": "Product not founded!"}, HTTPStatus.NOT_FOUND
+    try:
+        if not data:
+            raise BadRequest(description="Request body cannot be empty")
 
-    for key, value in data.items():
-        setattr(product, key, value)
+        product = ProductModel.query.filter_by(product_id=id).one_or_none()
+        if product == None:
+            return {"Error": "Product not founded!"}, HTTPStatus.NOT_FOUND
 
-    session.add(product)
-    session.commit()
+        for key, value in data.items():
+            setattr(product, key, value)
 
-    return jsonify(product), HTTPStatus.OK
+        session.add(product)
+        session.commit()
+
+        return jsonify(product), HTTPStatus.OK
+    
+    except BadRequest as err:
+        return {"error": err.description}, HTTPStatus.BAD_REQUEST
+    
 
 
 def delete_product(id):
