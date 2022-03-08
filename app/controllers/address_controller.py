@@ -1,13 +1,15 @@
+import re
 from http import HTTPStatus
 
 from flask import jsonify, request
 from flask_jwt_extended import get_jwt_identity, jwt_required
-from werkzeug.exceptions import ExpectationFailed, NotFound
+from werkzeug.exceptions import BadRequest, ExpectationFailed, NotFound
 
 from app.core.database import db
 from app.models.address_model import AddressModel
 from app.models.user_model import UserModel
 from app.models.users_addresses_model import UserAddressModel
+from app.services.validate_body_service import validate_body
 
 
 @jwt_required()
@@ -91,37 +93,32 @@ def get_address():
 
 @jwt_required()
 def update_address(address_id: int):
+
+    user = get_jwt_identity()
     data = request.get_json()
 
+    address = UserAddressModel.query.filter_by(
+        address_id=address_id, user_id=user["user_id"]
+    ).first()
+
     try:
-        if type(data["zip_code"]) != str:
-            raise ExpectationFailed(description="zip_code must be of String(str) type!")
 
-        if len(data["zip_code"]) != 8:
+        if not address:
+            raise NotFound(description="address not found!")
+
+        validate_body(data, cep=str, cidade=str, estado=str, logradouro=str, numero=int)
+
+        if len(data["cep"]) != 8:
             raise ExpectationFailed(
-                description="zip_code field must contain only 8 characters!"
-            )
-
-        if type(data["number"]) != int:
-            raise ExpectationFailed(description="House number must be of Integer type!")
-
-        if type(data["city"]) != str:
-            raise ExpectationFailed(description="city must be of String(str) type!")
-
-        if type(data["state"]) != str:
-            raise ExpectationFailed(description="state must be of String(str) type!")
-
-        if type(data["public_place"]) != str:
-            raise ExpectationFailed(
-                description="public_place must be of String(str) type!"
+                description="CEP field must contain only 8 characters!"
             )
 
         address_data_factory = {
-            "zip_code": data["zip_code"],
-            "state": data["state"],
-            "city": data["city"],
-            "public_place": data["public_place"],
-            "number": data["number"],
+            "zip_code": data["cep"],
+            "state": data["estado"],
+            "city": data["cidade"],
+            "public_place": data["logradouro"],
+            "number": data["numero"],
         }
 
         filtered_address = AddressModel.query.filter_by(
@@ -135,12 +132,9 @@ def update_address(address_id: int):
         db.session.commit()
 
         return {}, HTTPStatus.NO_CONTENT
-    except KeyError:
-        return {
-            "message": "Missing or invalid key(s)",
-            "required keys": ["zip_code", "state", "city", "public_place", "number"],
-            "recieved": list(data.keys()),
-        }, HTTPStatus.BAD_REQUEST
+
+    except BadRequest as e:
+        return e.description, HTTPStatus.BAD_REQUEST
     except NotFound as e:
         return {"error": f"{e.description}"}, e.code
     except ExpectationFailed as err:
