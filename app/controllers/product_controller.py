@@ -3,6 +3,7 @@ from http import HTTPStatus
 from flask import jsonify, request
 from psycopg2.errors import UniqueViolation
 from sqlalchemy.exc import IntegrityError
+from werkzeug.exceptions import NotFound
 
 from app.core.database import db
 from app.models.category_model import CategoryModel
@@ -33,7 +34,7 @@ def create_product():
 
         category_model: CategoryModel = CategoryModel.query.filter_by(
             name=category
-        ).first()
+        ).first_or_404(description=f"Category '{category}' not found!")
 
         data["category_id"] = category_model.category_id
 
@@ -62,6 +63,9 @@ def create_product():
     except TypeError:
         return {"Error": "The valid key is only model!"}, HTTPStatus.CONFLICT
 
+    except NotFound as err:
+        return {"error": err.description}, HTTPStatus.NOT_FOUND
+
 
 def get_all_products():
 
@@ -71,7 +75,6 @@ def get_all_products():
         populate_category()
         populate_product()
         products = ProductModel.query.order_by(ProductModel.product_id).all()
-
 
     return jsonify(products), HTTPStatus.OK
 
