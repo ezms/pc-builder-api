@@ -1,16 +1,17 @@
 from datetime import timedelta
 from http import HTTPStatus
-from multiprocessing.sharedctypes import Value
 
 import sqlalchemy
 from flask import jsonify, request
-from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
+from flask_jwt_extended import (create_access_token, get_jwt_identity,
+                                jwt_required)
 from psycopg2.errors import UniqueViolation
 from sqlalchemy.exc import DataError, IntegrityError
 from sqlalchemy.orm import Query
 from werkzeug.exceptions import BadRequest, ExpectationFailed, NotFound
 
 from app.core.database import db
+from app.models.address_model import AddressModel
 from app.models.carts_model import CartsModel
 from app.models.order_model import OrdersModel
 from app.models.order_product_model import OrdersProductsModel
@@ -131,6 +132,8 @@ def delete_user():
         addressess: Query = UserAddressModel.query.filter_by(user_id=user_id).all()
 
         for address in addressess:
+            address_query: Query = AddressModel.query.get(address.address_id)
+            db.session.delete(address_query)
             db.session.delete(address)
 
         for order in orders:
@@ -149,7 +152,7 @@ def delete_user():
         db.session.delete(user)
         db.session.commit()
 
-        return {"msg": f"User {user.name} has been deleted from the database"}
+        return "", HTTPStatus.NO_CONTENT
 
     except NotFound as err:
         return {"error": err.description}, HTTPStatus.NOT_FOUND
