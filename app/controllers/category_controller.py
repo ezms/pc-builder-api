@@ -1,4 +1,5 @@
 from http import HTTPStatus
+import os
 
 from flask import jsonify, request
 from psycopg2.errors import UniqueViolation
@@ -13,6 +14,13 @@ from app.services.validate_body_service import validate_body
 def create_category():
     session = db.session
     data = request.get_json()
+
+    token = request.headers["Authorization"].split(" ")[1]
+
+    if not token:
+        return {"error": "missing admin token"}, HTTPStatus.BAD_REQUEST
+    elif token != os.getenv("DATABASE_ADMIN_TOKEN"):
+        return {"error": "invalid admin token"}, HTTPStatus.FORBIDDEN
 
     try:
 
@@ -71,7 +79,7 @@ def update_category(id):
         session.commit()
 
         return jsonify(category), HTTPStatus.OK
-        
+
     except BadRequest as err:
         return {"error": err.description}, HTTPStatus.BAD_REQUEST
 
