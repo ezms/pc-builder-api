@@ -3,7 +3,7 @@ from http import HTTPStatus
 from flask import jsonify, request
 from psycopg2.errors import UniqueViolation
 from sqlalchemy.exc import IntegrityError
-from werkzeug.exceptions import NotFound
+from werkzeug.exceptions import BadRequest, NotFound
 
 from app.core.database import db
 from app.models.category_model import CategoryModel
@@ -61,7 +61,7 @@ def create_product():
         }, HTTPStatus.UNPROCESSABLE_ENTITY
 
     except TypeError:
-        return {"Error": "The valid key is only model!"}, HTTPStatus.CONFLICT
+        return {"error": "The valid key is only model!"}, HTTPStatus.CONFLICT
 
     except NotFound as err:
         return {"error": err.description}, HTTPStatus.NOT_FOUND
@@ -92,17 +92,24 @@ def update_product(id):
     session = db.session
     data = request.get_json()
 
-    product = ProductModel.query.filter_by(product_id=id).one_or_none()
-    if product == None:
-        return {"error": "Product not found!"}, HTTPStatus.NOT_FOUND
+    try:
+        if not data:
+            raise BadRequest(description="Request body cannot be empty")
 
-    for key, value in data.items():
-        setattr(product, key, value)
+        product = ProductModel.query.filter_by(product_id=id).one_or_none()
+        if product == None:
+            return {"error": "Product not found!"}, HTTPStatus.NOT_FOUND
 
-    session.add(product)
-    session.commit()
+        for key, value in data.items():
+            setattr(product, key, value)
 
-    return jsonify(product), HTTPStatus.OK
+        session.add(product)
+        session.commit()
+
+        return jsonify(product), HTTPStatus.OK
+
+    except BadRequest as err:
+        return {"error": err.description}, HTTPStatus.BAD_REQUEST
 
 
 def delete_product(id):

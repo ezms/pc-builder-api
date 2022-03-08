@@ -21,19 +21,10 @@ from app.services.validate_body_service import validate_body
 def register():
     data = request.get_json()
 
-    wrong_types = [
-        key
-        for key, value in data.items()
-        if type(value) is not str and key in ["name", "email", "password", "cpf"]
-    ]
-
-    if wrong_types:
-        return {
-            "error": "All the fields must be strings",
-            "wrong_fields": wrong_types,
-        }, HTTPStatus.BAD_REQUEST
-
     try:
+
+        validate_body(data, name=str, email=str, cpf=str, password=str)
+
         if len(data["cpf"]) != 11:
             raise ExpectationFailed(
                 description="'cpf' field must contain only 11 characters!"
@@ -70,16 +61,8 @@ def register():
         }, HTTPStatus.BAD_REQUEST
     except ExpectationFailed as err:
         return {"error": err.description}, HTTPStatus.BAD_REQUEST
-    except KeyError:
-        missing_fields = [
-            field
-            for field in ["name", "email", "password", "cpf"]
-            if field not in data.keys()
-        ]
-        return {
-            "available_fields": ["name", "email", "password", "cpf"],
-            "missing_fields": missing_fields,
-        }, HTTPStatus.UNPROCESSABLE_ENTITY
+    except BadRequest as err:
+        return err.description, HTTPStatus.UNPROCESSABLE_ENTITY
 
     user_asdict = user.asdict()
     user_asdict["cart"] = user.cart.asdict()
