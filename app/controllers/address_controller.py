@@ -152,7 +152,7 @@ def delete_address(address_id: int):
     try:
         filtered_address = AddressModel.query.filter_by(
             address_id=address_id
-        ).first_or_404()
+        ).first_or_404(description="Address id not found on database!")
 
         db.session.delete(filtered_address)
         db.session.commit()
