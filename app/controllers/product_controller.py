@@ -82,6 +82,8 @@ def get_all_products():
 
     products = ProductModel.query.order_by(ProductModel.product_id).all()
 
+    request.response.headers.add('Access-Control-Allow-Origin", "*"')
+
     if products == []:
         populate_category()
         populate_product()
