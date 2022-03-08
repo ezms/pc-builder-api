@@ -1,10 +1,10 @@
 from datetime import timedelta
 from http import HTTPStatus
+from multiprocessing.sharedctypes import Value
 
 import sqlalchemy
 from flask import jsonify, request
-from flask_jwt_extended import (create_access_token, get_jwt_identity,
-                                jwt_required)
+from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 from psycopg2.errors import UniqueViolation
 from sqlalchemy.exc import DataError, IntegrityError
 from sqlalchemy.orm import Query
@@ -109,7 +109,7 @@ def get_user():
     try:
         user = UserModel.query.get(current_user.get("user_id")).asdict()
     except AttributeError:
-        return {"error": "User does not exists!"}, HTTPStatus.NOT_FOUND
+        return {"error": "User not found on database!"}, HTTPStatus.NOT_FOUND
     return jsonify(user)
 
 
@@ -157,7 +157,6 @@ def delete_user():
 
 @jwt_required()
 def update_user():
-
     data = request.get_json()
 
     try:
@@ -167,24 +166,49 @@ def update_user():
     except BadRequest as err:
         return {"error": err.description}, HTTPStatus.BAD_REQUEST
 
-    current_user = get_jwt_identity()
-    user = UserModel.query.get(current_user["user_id"])
-
-    data = {
-        key: val
-        for key, val in data.items()
-        if key in ["email", "password", "cpf", "name"]
-    }
-
-    user.name = data.get("name") or user.name
-    user.cpf = data.get("cpf") or user.cpf
-    user.email = data.get("email") or user.email
-
-    if data.get("password"):
-        user.password = data.get("password")
-
     try:
-        db.session.commit()
+        current_user = get_jwt_identity()
+        user = UserModel.query.get(current_user["user_id"])
+
+        data = {
+            key: val
+            for key, val in data.items()
+            if key in ["email", "password", "cpf", "name"]
+        }
+
+        for val in data.values():
+            if type(val) != str:
+                invalid_values = [key for key in data.keys() if type(data[key]) != str]
+                return {
+                    "error": {
+                        "available_fields": [
+                            "name type should be string",
+                            "email type should be string",
+                            "cpf type should be string",
+                            "password type should be string",
+                        ],
+                        "invalid_fields": invalid_values,
+                    }
+                }, HTTPStatus.BAD_REQUEST
+            user.name = data.get("name") or user.name
+            user.cpf = data.get("cpf") or user.cpf
+            user.email = data.get("email") or user.email
+
+        if data.get("password"):
+            user.password = data.get("password")
+
+            if "cpf" in data.keys():
+                if len(data["cpf"]) != 11:
+                    raise ExpectationFailed(
+                        description="'cpf' field must contain only 11 characters!"
+                    )
+            db.session.commit()
+
+        user_dict = {
+            key: val
+            for key, val in user.asdict().items()
+            if key not in ["password_hash", "addresses", "orders"]
+        }
     except sqlalchemy.exc.IntegrityError as e:
         db.session.close()
         if isinstance(e.orig, UniqueViolation):
@@ -192,11 +216,9 @@ def update_user():
                 jsonify({"error": e.args[0][e.args[0].find("Key") : -2]}),
                 HTTPStatus.CONFLICT,
             )
-
-    user_dict = {
-        key: val
-        for key, val in user.asdict().items()
-        if key not in ["password_hash", "addresses", "orders"]
-    }
+    except ExpectationFailed as err:
+        return {"error": err.description}, HTTPStatus.BAD_REQUEST
+    except AttributeError:
+        return {"error": "User not found on database!"}, HTTPStatus.NOT_FOUND
 
     return jsonify(user_dict)
