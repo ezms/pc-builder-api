@@ -1,5 +1,4 @@
 from http import HTTPStatus
-from http.client import OK
 
 from flask import jsonify, request
 from psycopg2.errors import UniqueViolation
@@ -18,15 +17,15 @@ def create_product():
     try:
 
         if not type(data["model"]) == str:
-            return {"Error": "The model must be string!"}, HTTPStatus.BAD_REQUEST
+            return {"error": "The model must be string!"}, HTTPStatus.BAD_REQUEST
         if not type(data["img"]) == str:
-            return {"Error": "The img must be string!"}, HTTPStatus.BAD_REQUEST
+            return {"error": "The img must be string!"}, HTTPStatus.BAD_REQUEST
         if not type(data["price"]) == float:
-            return {"Error": "The price must be float!"}, HTTPStatus.BAD_REQUEST
+            return {"error": "The price must be float!"}, HTTPStatus.BAD_REQUEST
         if not type(data["description"]) == str:
-            return {"Error": "The description must be string!"}, HTTPStatus.BAD_REQUEST
+            return {"error": "The description must be string!"}, HTTPStatus.BAD_REQUEST
         if not type(data["category"]) == str:
-            return {"Error": "The category must be string!"}, HTTPStatus.BAD_REQUEST
+            return {"error": "The category must be string!"}, HTTPStatus.BAD_REQUEST
 
         data["category"] = data["category"].title()
 
@@ -47,7 +46,7 @@ def create_product():
 
     except IntegrityError as error:
         if isinstance(error.orig, UniqueViolation):
-            return {"Error": "Product already exists!"}, HTTPStatus.CONFLICT
+            return {"error": "Product already exists!"}, HTTPStatus.CONFLICT
 
     except KeyError:
         missing_fields = [
@@ -81,7 +80,7 @@ def get_product_by_id(id):
 
     product = ProductModel.query.filter_by(product_id=id).one_or_none()
     if product == None:
-        return {"Error": "Product not founded!"}, HTTPStatus.NOT_FOUND
+        return {"error": "Product not found!"}, HTTPStatus.NOT_FOUND
 
     return jsonify(product), HTTPStatus.OK
 
@@ -92,7 +91,7 @@ def update_product(id):
 
     product = ProductModel.query.filter_by(product_id=id).one_or_none()
     if product == None:
-        return {"Error": "Product not founded!"}, HTTPStatus.NOT_FOUND
+        return {"error": "Product not found!"}, HTTPStatus.NOT_FOUND
 
     for key, value in data.items():
         setattr(product, key, value)
@@ -108,7 +107,7 @@ def delete_product(id):
 
     product = ProductModel.query.filter_by(product_id=id).one_or_none()
     if product == None:
-        return {"Error": "Product not founded!"}, HTTPStatus.NOT_FOUND
+        return {"error": "Product not found!"}, HTTPStatus.NOT_FOUND
 
     session.delete(product)
     session.commit()
