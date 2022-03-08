@@ -74,7 +74,7 @@ def register():
 
 
 def login():
-    print(request.response.header)
+
     data = request.get_json()
     data = {key: val for key, val in data.items() if key in ["email", "password"]}
 

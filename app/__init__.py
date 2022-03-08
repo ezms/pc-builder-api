@@ -7,7 +7,7 @@ from app.core import database, email, jwt, migrations
 
 def create_app():
     app = Flask(__name__)
-    CORS(app, resources={r"/*": {"origins": "*"}})
+    CORS(app)
 
     database.init_app(app)
     migrations.init_app(app)
