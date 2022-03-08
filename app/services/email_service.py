@@ -11,7 +11,7 @@ from app.models.order_model import OrdersModel
 from app.models.order_product_model import OrdersProductsModel
 from app.models.product_model import ProductModel
 
-locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
+locale.setlocale(locale.LC_ALL, "en_US.utf8")
 
 
 def send_email_to_client(address, order_id, date):
