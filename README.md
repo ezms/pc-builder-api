@@ -1,10 +1,10 @@
-# LEADS API
+# <b> LEADS API </b>
 
-## URL base da API
+## <b> URL base da API </b>
 
 https://pc-builder-api-v2.herokuapp.com/
 
-## Tecnologias utilizadas
+## <b> Tecnologias utilizadas </b>
 
 #### Framework
 
@@ -21,19 +21,31 @@ https://pc-builder-api-v2.herokuapp.com/
 - Blueprints <br>
 - Dataclasses
 
-## Inicialização da API
+<br>
+
+## <b> > Inicialização da API </b>
 
 Para começar a utilizar a API Leads, copie a URL base da aplicação e use-a na sua ferramenta cliente de API de preferência (recomendo o Insomnia), complementando a URL com os endpoints da aplicação, explicados a seguir.
 
-## Endpoints
+<br>
+
+<br>
+
+## <b> > Endpoints </b>
 
 <!-- Existem X endpoints nessa aplicação: X pra registro de usuário, X pra listagem dos usuários... -->
 
-## Usuário
+<br>
 
-### Registro
+<br>
 
-POST /user/register
+## <b> > Usuário </b>
+
+<br>
+
+### <b> Registro </b>
+
+<i> POST /user/register </i>
 
 Essa rota serve para registrar um novo usuário no banco de dados, sendo obrigatório passar no corpo da requisição o nome, email, telefone e cpf do usuário a registrar. <br>
 Exemplo de requisição:
@@ -64,9 +76,11 @@ Dessa requisição é esperado um retorno com os dados do usuário cadastrado, c
 }
 ```
 
-### Login
+<br>
 
-POST /user/login
+### <b> Login </b>
+
+<i> POST /user/login </i>
 
 Essa rota serve para fazer login de um usuário já cadastrado no banco de dados, sendo obrigatório passar no corpo da requisição o email, e senha do usuário. <br>
 Exemplo de requisição:
@@ -86,9 +100,11 @@ Dessa requisição é esperado um retorno com o token de acesso do usuário, com
 }
 ```
 
-### Listagem
+<br>
 
-GET /user
+### <b> Listagem </b>
+
+<i> GET /user </i>
 
 Essa rota é usada para obter os dados do usuário que está logado, cadastrado no banco de dados. <br>
 Aqui não é necessário passar nenhum dado no corpo da requisição, apenas uma autorização do tipo bearer token, obtida no login do usuário. <br>
@@ -105,9 +121,11 @@ Exemplo de resposta dessa rota:
 }
 ```
 
-### Atualização
+<br>
 
-PATCH /user
+### <b> Atualização </b>
+
+<i> PATCH /user </i>
 
 Já a rota patch /user pode ser usada para atualizar qualquer informação do usuário que está logado, bastando passar no corpo da requisição o dado a ser atualizado, e passar na autorização o bearer token do usuário logado, obtido no login <br>
 Exemplo de requisição:
@@ -129,9 +147,11 @@ Exemplo de resposta dessa rota:
 }
 ```
 
-### Deleção
+<br>
 
-DELETE /user <br/>
+### <b> Deleção </b>
+
+<i> DELETE /user </i>
 
 Por último, a requisição DELETE /user pode ser usada para deletar um usuário específico do banco de dados. <br>
 Aqui não é necessário passar nenhum dado no corpo da requisição, apenas uma autorização do tipo bearer token, obtida no login do usuário. <br>
@@ -139,11 +159,15 @@ A requisição bem sucedida retorna a resposta 204, sem conteúdo.
 
 <br>
 
-## Categoria
+<br>
 
-### Registro
+## <b> > Categoria </b>
 
-POST /categories
+<br>
+
+### <b> Registro </b>
+
+<i> POST /categories </i>
 
 Essa rota serve para registrar uma nova categoria no banco de dados, sendo obrigatório passar no corpo da requisição o nome da categoria a registrar. <br>
 Essa rota é protegida pela autorização bearer token de administrador. <br>
@@ -164,9 +188,13 @@ Dessa requisição é esperado um retorno com os dados da categoria cadastrada, 
 }
 ```
 
-### Listagem
+<br>
 
-GET /categories
+### <b> Listagem </b>
+
+<br>
+
+<i> GET /categories </i>
 
 Essa rota é usada para obter as categorias cadastradas no banco de dados. <br>
 Aqui não é necessário passar nenhum dado no corpo da requisição. <br>
@@ -186,7 +214,7 @@ Exemplo de resposta dessa requisição:
 ]
 ```
 
-GET /categories/\<id\>
+<i> GET /categories/\<id\> </i>
 
 Essa rota é usada para obter a categoria referente ao id passado na url. <br>
 Aqui não é necessário passar nenhum dado no corpo da requisição. <br>
@@ -200,9 +228,11 @@ Exemplo de resposta dessa requisição:
 }
 ```
 
-### Atualização
+<br>
 
-PATCH /categories/\<id\>
+### <b> Atualização </b>
+
+<i> PATCH /categories/\<id\> </i>
 
 Já essa rota pode ser usada para atualizar o nome da categoria referente ao id passado na url, bastando passar no corpo da requisição o dado a ser atualizado. <br>
 Aqui não é necessário passar nenhum dado no corpo da requisição. <br>
@@ -224,9 +254,11 @@ Exemplo de resposta dessa rota:
 }
 ```
 
-### Deleção
+<br>
 
-DELETE /categories/<\id\>
+### <b> Deleção </b>
+
+<i> DELETE /categories/<\id\> </i>
 
 Por último, essa requisição pode ser usada para deletar uma categoria específica do banco de dados. <br>
 Aqui não é necessário passar nenhum dado no corpo da requisição, apenas a id da categoria na url da requisição. <br>
@@ -235,11 +267,15 @@ A requisição bem sucedida retorna a resposta 204, sem conteúdo.
 
 <br>
 
-## Produtos
+<br>
 
-### Registro
+## <b> > Produtos </b>
 
-POST /products
+<br>
+
+### <b> Registro </b>
+
+<i> POST /products </i>
 
 Essa rota serve para registrar um novo produto no banco de dados, sendo obrigatório passar no corpo da requisição o model, img, price, description, e category do produto a registrar. <br>
 Essa rota é protegida pela autorização bearer token de administrador. <br>
@@ -267,9 +303,11 @@ Dessa requisição é esperado um retorno com os dados do produto cadastrado, co
 }
 ```
 
-### Listagem
+<br>
 
-GET /products
+### <b> Listagem </b>
+
+<i> GET /products </i>
 
 Essa rota é usada para obter todos os produtos cadastrados no banco de dados. <br>
 Aqui não é necessário passar nenhum dado no corpo da requisição. <br>
@@ -288,7 +326,7 @@ Exemplo de resposta dessa requisição:
 ]
 ```
 
-GET /products/\<id\>
+<i> GET /products/\<id\> </i>
 
 Essa rota é usada para obter o produto referente ao id passado na url. <br>
 Aqui não é necessário passar nenhuma autorização, e nenhum dado no corpo da requisição.<br>
@@ -305,9 +343,11 @@ Exemplo de resposta dessa requisição:
 }
 ```
 
-### Atualização
+<br>
 
-PATCH /products/\<id\>
+### <b> Atualização </b>
+
+<i> PATCH /products/\<id\> </i>
 
 Já essa rota pode ser usada para atualizar as informações do produto referente ao id passado na url, bastando passar no corpo da requisição o dado a ser atualizado. <br>
 Aqui não é necessário passar nenhuma autorização, e nenhum dado no corpo da requisição. <br>
@@ -332,9 +372,11 @@ Exemplo de resposta dessa rota:
 }
 ```
 
-### Deleção
+<br>
 
-DELETE /products/<\id\>
+### <b> Deleção </b>
+
+<i> DELETE /products/<\id\> </i>
 
 Por último, essa requisição pode ser usada para deletar um produto específico do banco de dados. <br>
 Aqui não é necessário passar nenhum dado no corpo da requisição, apenas a id do produto na url da requisição. <br>
@@ -342,11 +384,15 @@ A requisição bem sucedida retorna a resposta 204, sem conteúdo.
 
 <br>
 
-## Carrinho
+<br>
 
-### Registro
+## <b> > Carrinho </b>
 
-POST /cart/\<id\>
+<br>
+
+### <b> Registro </b>
+
+<i> POST /cart/\<id\> </i>
 
 Essa rota serve para registrar um novo produto no carrinho do usuário logado. <br>
 Aqui não é necessário passar nenhum dado no corpo da requisição, apenas uma autorização do tipo bearer token, obtida no login do usuário, e a id do produto a registrar no carrinho na url da requisição. <br>
@@ -363,9 +409,11 @@ Exemplo de resposta da requisição:
 }
 ```
 
-### Listagem
+<br>
 
-GET /cart
+### <b> Listagem </b>
+
+<i> GET /cart </i>
 
 Essa rota é usada para obter todos os produtos adicionados no carrinho do usuário logado. <br>
 Aqui não é necessário passar nenhum dado no corpo da requisição, apenas uma autorização do tipo bearer token, obtida no login do usuário. <br>
@@ -386,9 +434,11 @@ Exemplo de resposta da requisição:
 }
 ```
 
-### Deleção
+<br>
 
-DELETE /cart/<\id\>
+### <b> Deleção </b>
+
+<i> DELETE /cart/<\id\> </i>
 
 Por último, essa requisição pode ser usada para deletar um produto específico do carrinho. <br>
 Aqui não é necessário passar nenhum dado no corpo da requisição, apenas uma autorização do tipo bearer token, obtida no login do usuário, e a id do produto a registrar no carrinho na url da requisição. <br>
@@ -402,11 +452,15 @@ A requisição retorna a seguinte mensagem, em caso de sucesso:
 
 <br>
 
-## Endereços
+<br>
 
-### Registro
+## <b> > Endereços </b>
 
-POST /address
+<br>
+
+### <b> Registro </b>
+
+<i> POST /address </i>
 
 Essa rota serve para registrar um novo endereço ao usuário logado, sendo obrigatório passar no corpo da requisição o cep, cidade, estado, logradouro, e numero do endereço a registrar, além de uma autorização do tipo bearer token, obtida no login do usuário. <br>
 Exemplo de requisição:
@@ -433,9 +487,11 @@ Dessa requisição é esperado um retorno com os dados do endereço cadastrado, 
 }
 ```
 
-### Listagem
+<br>
 
-GET /address
+### <b> Listagem </b>
+
+<i> GET /address </i>
 
 Essa rota é usada para obter todos os endereços cadastrados para o usuário logado. <br>
 Aqui não é necessário passar nenhum dado no corpo da requisição, apenas uma autorização do tipo bearer token, obtida no login do usuário. <br>
@@ -454,9 +510,11 @@ Exemplo de resposta dessa requisição:
 ]
 ```
 
-### Atualização
+<br>
 
-PUT /address/\<id\>
+### <b> Atualização </b>
+
+<i> PUT /address/\<id\> </i>
 
 Já essa rota pode ser usada para atualizar as informações do endereço referente ao id passado na url, bastando passar no corpo da requisição o endereço inteiro a ser atualizado, com os campos obrigatórios zip_code, state, city, public_place e number. <br>
 Aqui também é necessário passar uma autorização do tipo bearer token, obtida no login do usuário. <br>
@@ -473,9 +531,11 @@ Exemplo de requisição:
 }
 ```
 
-### Deleção
+<br>
 
-DELETE /address/<\id\>
+### <b> Deleção </b>
+
+<i> DELETE /address/<\id\> </i>
 
 Por último, essa requisição pode ser usada para deletar um endereço específico cadastrado para o usuário logado. <br>
 Aqui não é necessário passar nenhum dado no corpo da requisição, apenas a id do produto na url da requisição e uma autorização do tipo bearer token, obtida no login do usuário. <br>
@@ -483,11 +543,13 @@ A requisição bem sucedida retorna a resposta 204 - sem conteúdo.
 
 <br>
 
-## Pedidos
+<br>
 
-### Listagem
+## <b> > Pedidos </b>
 
-GET /orders
+### <b> Listagem </b>
+
+<i> GET /orders </i>
 
 Essa rota é usada para obter todos os pedidos do usuário logado. <br>
 Aqui não é necessário passar nenhum dado no corpo da requisição, apenas uma autorização do tipo bearer token, obtida no login do usuário. <br>
@@ -508,7 +570,7 @@ Exemplo de resposta dessa requisição:
 }
 ``` -->
 
-GET /orders/\<id\>
+<i> GET /orders/\<id\> </i>
 
 Essa rota é usada para obter o pedido do usuário logado, referente ao id passado na url. <br>
 Aqui não é necessário passar nenhum dado no corpo da requisição, apenas a id do produto na url da requisição e uma autorização do tipo bearer token, obtida no login do usuário.<br>
