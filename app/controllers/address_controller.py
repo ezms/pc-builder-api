@@ -68,24 +68,32 @@ def get_address():
 
 @jwt_required()
 def update_address(address_id: int):
+
+    user = get_jwt_identity()
     data = request.get_json()
 
-    try:
-        validate_body(
-            data, zip_code=str, state=str, city=str, public_place=str, number=int
-        )
+    address = UserAddressModel.query.filter_by(
+        address_id=address_id, user_id=user["user_id"]
+    ).first()
 
-        if len(data["zip_code"]) != 8:
+    try:
+
+        if not address:
+            raise NotFound(description="address not found!")
+
+        validate_body(data, cep=str, cidade=str, estado=str, logradouro=str, numero=int)
+
+        if len(data["cep"]) != 8:
             raise ExpectationFailed(
                 description="CEP field must contain only 8 characters!"
             )
 
         address_data_factory = {
-            "zip_code": data["zip_code"],
-            "state": data["state"],
-            "city": data["city"],
-            "public_place": data["public_place"],
-            "number": data["number"],
+            "zip_code": data["cep"],
+            "state": data["estado"],
+            "city": data["cidade"],
+            "public_place": data["logradouro"],
+            "number": data["numero"],
         }
 
         filtered_address = AddressModel.query.filter_by(
