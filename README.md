@@ -146,6 +146,7 @@ A requisição bem sucedida retorna a resposta 204, sem conteúdo.
 POST /categories
 
 Essa rota serve para registrar uma nova categoria no banco de dados, sendo obrigatório passar no corpo da requisição o nome da categoria a registrar. <br>
+Essa rota é protegida pela autorização bearer token de administrador. <br>
 Exemplo de requisição:
 
 ```json
@@ -168,19 +169,44 @@ Dessa requisição é esperado um retorno com os dados da categoria cadastrada, 
 GET /categories
 
 Essa rota é usada para obter as categorias cadastradas no banco de dados. <br>
-Aqui não é necessário passar nenhuma autorização, e nenhum dado no corpo da requisição.
+Aqui não é necessário passar nenhum dado no corpo da requisição. <br>
+Essa rota é protegida pela autorização bearer token de administrador. <br>
+Exemplo de resposta dessa requisição:
+
+```json
+[
+  {
+    "category_id": 1,
+    "name": "Processadores"
+  },
+  {
+    "category_id": 2,
+    "name": "Periféricos"
+  }
+]
+```
 
 GET /categories/\<id\>
 
 Essa rota é usada para obter a categoria referente ao id passado na url. <br>
-Aqui não é necessário passar nenhuma autorização, e nenhum dado no corpo da requisição.
+Aqui não é necessário passar nenhum dado no corpo da requisição. <br>
+Essa rota é protegida pela autorização bearer token de administrador. <br>
+Exemplo de resposta dessa requisição:
+
+```json
+{
+  "category_id": 1,
+  "name": "Processadores"
+}
+```
 
 ### Atualização
 
 PATCH /categories/\<id\>
 
 Já essa rota pode ser usada para atualizar o nome da categoria referente ao id passado na url, bastando passar no corpo da requisição o dado a ser atualizado. <br>
-Aqui não é necessário passar nenhuma autorização, e nenhum dado no corpo da requisição. <br>
+Aqui não é necessário passar nenhum dado no corpo da requisição. <br>
+Essa rota é protegida pela autorização bearer token de administrador. <br>
 Exemplo de requisição:
 
 ```json
@@ -204,6 +230,7 @@ DELETE /categories/<\id\>
 
 Por último, essa requisição pode ser usada para deletar uma categoria específica do banco de dados. <br>
 Aqui não é necessário passar nenhum dado no corpo da requisição, apenas a id da categoria na url da requisição. <br>
+Essa rota é protegida pela autorização bearer token de administrador. <br>
 A requisição bem sucedida retorna a resposta 204, sem conteúdo.
 
 <br>
@@ -215,6 +242,7 @@ A requisição bem sucedida retorna a resposta 204, sem conteúdo.
 POST /products
 
 Essa rota serve para registrar um novo produto no banco de dados, sendo obrigatório passar no corpo da requisição o model, img, price, description, e category do produto a registrar. <br>
+Essa rota é protegida pela autorização bearer token de administrador. <br>
 Exemplo de requisição:
 
 ```json
@@ -244,12 +272,38 @@ Dessa requisição é esperado um retorno com os dados do produto cadastrado, co
 GET /products
 
 Essa rota é usada para obter todos os produtos cadastrados no banco de dados. <br>
-Aqui não é necessário passar nenhuma autorização, e nenhum dado no corpo da requisição.
+Aqui não é necessário passar nenhum dado no corpo da requisição. <br>
+Essa rota é protegida pela autorização bearer token de administrador. <br>
+Exemplo de resposta dessa requisição:
+
+```json
+[
+  {
+    "product_id": 1,
+    "model": "Processador AMD Ryzen 5 3600, AM4, 3.6GHz",
+    "img": "www.img.com.br",
+    "price": 1678.31,
+    "description": "Marca: AMD, Modelo: Ryzen 5 3600, Cores: 6, Threads: 12, Socket: AM4, Base Clock: 3.6, Cooler Box: Incluso, GPU Integrada: Não, Consumo: 65 Watts"
+  }
+]
+```
 
 GET /products/\<id\>
 
 Essa rota é usada para obter o produto referente ao id passado na url. <br>
-Aqui não é necessário passar nenhuma autorização, e nenhum dado no corpo da requisição.
+Aqui não é necessário passar nenhuma autorização, e nenhum dado no corpo da requisição.<br>
+Essa rota é protegida pela autorização bearer token de administrador. <br>
+Exemplo de resposta dessa requisição:
+
+```json
+{
+  "product_id": 1,
+  "model": "Processador AMD Ryzen 5 3600, AM4, 3.6GHz",
+  "img": "www.img.com.br",
+  "price": 1678.31,
+  "description": "Marca: AMD, Modelo: Ryzen 5 3600, Cores: 6, Threads: 12, Socket: AM4, Base Clock: 3.6, Cooler Box: Incluso, GPU Integrada: Não, Consumo: 65 Watts"
+}
+```
 
 ### Atualização
 
@@ -426,3 +480,51 @@ DELETE /address/<\id\>
 Por último, essa requisição pode ser usada para deletar um endereço específico cadastrado para o usuário logado. <br>
 Aqui não é necessário passar nenhum dado no corpo da requisição, apenas a id do produto na url da requisição e uma autorização do tipo bearer token, obtida no login do usuário. <br>
 A requisição bem sucedida retorna a resposta 204 - sem conteúdo.
+
+<br>
+
+## Pedidos
+
+### Listagem
+
+GET /orders
+
+Essa rota é usada para obter todos os pedidos do usuário logado. <br>
+Aqui não é necessário passar nenhum dado no corpo da requisição, apenas uma autorização do tipo bearer token, obtida no login do usuário. <br>
+Exemplo de resposta dessa requisição:
+
+<!-- ```json
+{
+  "total": 1678.31,
+  "products": [
+    {
+      "model": "Processador AMD Ryzen 5 3600, AM4, 3.6GHz",
+      "price": 1678.31,
+      "img": "www.img.com.br",
+      "description": "Marca: AMD, Modelo: Ryzen 5 3600, Cores: 6, Threads: 12, Socket: AM4, Base Clock: 3.6, Cooler Box: Incluso, GPU Integrada: Não, Consumo: 65 Watts",
+      "product_id": 2
+    }
+  ]
+}
+``` -->
+
+GET /orders/\<id\>
+
+Essa rota é usada para obter o pedido do usuário logado, referente ao id passado na url. <br>
+Aqui não é necessário passar nenhum dado no corpo da requisição, apenas a id do produto na url da requisição e uma autorização do tipo bearer token, obtida no login do usuário.<br>
+Exemplo de resposta dessa requisição:
+
+```json
+{
+  "total": 1678.31,
+  "products": [
+    {
+      "model": "Processador AMD Ryzen 5 3600, AM4, 3.6GHz",
+      "price": 1678.31,
+      "img": "www.img.com.br",
+      "description": "Marca: AMD, Modelo: Ryzen 5 3600, Cores: 6, Threads: 12, Socket: AM4, Base Clock: 3.6, Cooler Box: Incluso, GPU Integrada: Não, Consumo: 65 Watts",
+      "product_id": 2
+    }
+  ]
+}
+```
