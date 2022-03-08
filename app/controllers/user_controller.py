@@ -1,5 +1,6 @@
 from datetime import timedelta
 from http import HTTPStatus
+from multiprocessing.sharedctypes import Value
 
 import sqlalchemy
 from flask import jsonify, request
@@ -146,7 +147,6 @@ def delete_user():
 
 @jwt_required()
 def update_user():
-
     data = request.get_json()
 
     try:
@@ -164,6 +164,21 @@ def update_user():
         for key, val in data.items()
         if key in ["email", "password", "cpf", "name"]
     }
+
+    for val in data.values():
+        if type(val) != str:
+            invalid_values = [key for key in data.keys() if type(data[key]) != str]
+            return {
+                "error": {
+                    "available_fields": [
+                        "name type should be string",
+                        "email type should be string",
+                        "cpf type should be string",
+                        "password type should be string",
+                    ],
+                    "invalid_fields": invalid_values,
+                }
+            }, HTTPStatus.BAD_REQUEST
 
     user.name = data.get("name") or user.name
     user.cpf = data.get("cpf") or user.cpf
