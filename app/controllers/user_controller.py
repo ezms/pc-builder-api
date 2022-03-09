@@ -131,6 +131,9 @@ def login():
     except NotFound:
         return {"error": "email not found"}, HTTPStatus.NOT_FOUND
 
+    if not user.confirmed_email:
+        return {"error": "Email is not verified"}, HTTPStatus.UNAUTHORIZED
+
     if user.verify_password(password):
         access_token = create_access_token(
             identity=user, expires_delta=timedelta(days=1)
