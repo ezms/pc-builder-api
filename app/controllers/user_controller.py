@@ -1,16 +1,20 @@
 from datetime import timedelta
 from http import HTTPStatus
+from os import getenv
 
 import sqlalchemy
-from flask import jsonify, request
+from flask import current_app, jsonify, request, url_for
 from flask_jwt_extended import (create_access_token, get_jwt_identity,
                                 jwt_required)
+from flask_mail import Message
+from itsdangerous import BadTimeSignature, SignatureExpired
 from psycopg2.errors import UniqueViolation
 from sqlalchemy.exc import DataError, IntegrityError
 from sqlalchemy.orm import Query
 from werkzeug.exceptions import BadRequest, ExpectationFailed, NotFound
 
 from app.core.database import db
+from app.core.email import secret_url
 from app.models.address_model import AddressModel
 from app.models.carts_model import CartsModel
 from app.models.order_model import OrdersModel
@@ -38,6 +42,17 @@ def register():
             password=data["password"],
             cpf=data["cpf"],
         )
+
+        email = data["email"]
+        token = secret_url.dumps(email, salt="email-confirm")
+
+        msg = Message(
+            "Confirm your Email", sender=getenv("MAIL_USERNAME"), recipients=[email]
+        )
+        link = url_for("api.blueprint_user.confirm_email", token=token, _external=True)
+
+        msg.body = f"Your confirmation link is {link}"
+        current_app.mail.send(msg)
 
         db.session.add(user)
 
@@ -71,6 +86,31 @@ def register():
     user_asdict["cart"]["products"] = user.cart.products
 
     return jsonify(user_asdict), HTTPStatus.CREATED
+
+
+def confirm_email(token):
+    try:
+        email = secret_url.loads(token, salt="email-confirm", max_age=3600)
+
+        filtered_user = (
+            db.session.query(UserModel).filter_by(email=email).first_or_404()
+        )
+
+        fields_to_update = {"confirmed_email": True}
+
+        for key, value in fields_to_update.items():
+            setattr(filtered_user, key, value)
+
+        db.session.add(filtered_user)
+        db.session.commit()
+
+        return jsonify(True), HTTPStatus.OK
+    except NotFound as err:
+        return {"error": err.description}, HTTPStatus.NOT_FOUND
+    except SignatureExpired:
+        return {"error": "The token is expired!"}
+    except BadTimeSignature:
+        return {"error": "Invalid token!"}
 
 
 def login():
