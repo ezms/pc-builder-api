@@ -1,4 +1,6 @@
+import os
 from http import HTTPStatus
+import os
 
 from flask import jsonify, request
 from psycopg2.errors import UniqueViolation
@@ -8,11 +10,8 @@ from werkzeug.exceptions import BadRequest, NotFound
 from app.core.database import db
 from app.models.category_model import CategoryModel
 from app.models.product_model import ProductModel
-from app.services.products_services import (
-    create_category,
-    populate_category,
-    populate_product,
-)
+from app.services.products_services import (create_category, populate_category,
+                                            populate_product)
 from app.services.validate_body_service import validate_body
 
 
@@ -20,18 +19,18 @@ def create_product():
     session = db.session
     data = request.get_json()
 
+    token = request.headers["Authorization"].split(" ")[1]
+
+    if not token:
+        return {"error": "missing admin token"}, HTTPStatus.BAD_REQUEST
+    elif token != os.getenv("DATABASE_ADMIN_TOKEN"):
+        return {"error": "invalid admin token"}, HTTPStatus.FORBIDDEN
+
     try:
 
-        if not type(data["model"]) == str:
-            return {"error": "The model must be string!"}, HTTPStatus.BAD_REQUEST
-        if not type(data["img"]) == str:
-            return {"error": "The img must be string!"}, HTTPStatus.BAD_REQUEST
-        if not type(data["price"]) == float:
-            return {"error": "The price must be float!"}, HTTPStatus.BAD_REQUEST
-        if not type(data["description"]) == str:
-            return {"error": "The description must be string!"}, HTTPStatus.BAD_REQUEST
-        if not type(data["category"]) == str:
-            return {"error": "The category must be string!"}, HTTPStatus.BAD_REQUEST
+        validate_body(
+            data, model=str, img=str, price=float, description=str, category=str
+        )
 
         data["category"] = data["category"].title()
 
@@ -77,6 +76,9 @@ def create_product():
     except NotFound as err:
         return {"error": err.description}, HTTPStatus.NOT_FOUND
 
+    except BadRequest as err:
+        return err.description, HTTPStatus.UNPROCESSABLE_ENTITY
+
 
 def get_all_products():
 
@@ -102,6 +104,13 @@ def get_product_by_id(id):
 def update_product(id):
     session = db.session
     data = request.get_json()
+
+    token = request.headers["Authorization"].split(" ")[1]
+
+    if not token:
+        return {"error": "missing admin token"}, HTTPStatus.BAD_REQUEST
+    elif token != os.getenv("DATABASE_ADMIN_TOKEN"):
+        return {"error": "invalid admin token"}, HTTPStatus.FORBIDDEN
 
     try:
         if not data:
@@ -135,6 +144,13 @@ def update_product(id):
 
 def delete_product(id):
     session = db.session
+
+    token = request.headers["Authorization"].split(" ")[1]
+
+    if not token:
+        return {"error": "missing admin token"}, HTTPStatus.BAD_REQUEST
+    elif token != os.getenv("DATABASE_ADMIN_TOKEN"):
+        return {"error": "invalid admin token"}, HTTPStatus.FORBIDDEN
 
     product = ProductModel.query.filter_by(product_id=id).one_or_none()
     if product == None:

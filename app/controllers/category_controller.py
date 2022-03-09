@@ -1,3 +1,4 @@
+import os
 from http import HTTPStatus
 
 from flask import jsonify, request
@@ -7,12 +8,21 @@ from werkzeug.exceptions import BadRequest
 
 from app.core.database import db
 from app.models.category_model import CategoryModel
+from app.models.product_model import ProductModel
+from app.services.products_query_services import get_products_for_category
 from app.services.validate_body_service import validate_body
 
 
 def create_category():
     session = db.session
     data = request.get_json()
+
+    token = request.headers["Authorization"].split(" ")[1]
+
+    if not token:
+        return {"error": "missing admin token"}, HTTPStatus.BAD_REQUEST
+    elif token != os.getenv("DATABASE_ADMIN_TOKEN"):
+        return {"error": "invalid admin token"}, HTTPStatus.FORBIDDEN
 
     try:
 
@@ -50,12 +60,26 @@ def get_category_by_id(id):
     if category == None:
         return {"error": "Category not found!"}, HTTPStatus.NOT_FOUND
 
-    return jsonify(category), HTTPStatus.OK
+    products = get_products_for_category(
+        CategoryModel, id, ProductModel.category_id, CategoryModel.category_id
+    )
+
+    category_asdict = category.asdict()
+    category_asdict["products"] = products
+
+    return jsonify(category_asdict), HTTPStatus.OK
 
 
 def update_category(id):
     session = db.session
     data = request.get_json()
+
+    token = request.headers["Authorization"].split(" ")[1]
+
+    if not token:
+        return {"error": "missing admin token"}, HTTPStatus.BAD_REQUEST
+    elif token != os.getenv("DATABASE_ADMIN_TOKEN"):
+        return {"error": "invalid admin token"}, HTTPStatus.FORBIDDEN
 
     try:
         validate_body(data, name=str)
@@ -71,13 +95,20 @@ def update_category(id):
         session.commit()
 
         return jsonify(category), HTTPStatus.OK
-        
+
     except BadRequest as err:
         return {"error": err.description}, HTTPStatus.BAD_REQUEST
 
 
 def delete_category(id):
     session = db.session
+
+    token = request.headers["Authorization"].split(" ")[1]
+
+    if not token:
+        return {"error": "missing admin token"}, HTTPStatus.BAD_REQUEST
+    elif token != os.getenv("DATABASE_ADMIN_TOKEN"):
+        return {"error": "invalid admin token"}, HTTPStatus.FORBIDDEN
 
     category = CategoryModel.query.filter_by(category_id=id).one_or_none()
     if category == None:
