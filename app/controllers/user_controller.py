@@ -125,9 +125,10 @@ def login():
     email = data.get("email")
     password = data.get("password")
 
-    user: UserModel = UserModel.query.filter_by(email=email.lower()).first()
+    try:
+        user: UserModel = UserModel.query.filter_by(email=email.lower()).first_or_404()
 
-    if not user:
+    except NotFound:
         return {"error": "email not found"}, HTTPStatus.NOT_FOUND
 
     if user.verify_password(password):
