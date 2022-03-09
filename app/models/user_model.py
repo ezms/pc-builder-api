@@ -1,10 +1,8 @@
-from dataclasses import dataclass, asdict
+from dataclasses import asdict, dataclass
 
-from werkzeug.security import generate_password_hash, check_password_hash
-
-from sqlalchemy.orm import relationship, backref
-
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Boolean, Column, Integer, String
+from sqlalchemy.orm import backref, relationship
+from werkzeug.security import check_password_hash, generate_password_hash
 
 from app.core.database import db
 
@@ -17,6 +15,7 @@ class UserModel(db.Model):
     user_id: int = Column(Integer, primary_key=True)
     name: str = Column(String, nullable=False)
     email: str = Column(String, unique=True, nullable=False)
+    confirmed_email = Column(Boolean, nullable=False, default=False)
     password_hash = Column(String, nullable=False)
     cpf: str = Column(String(11), nullable=False, unique=True)
 
