@@ -49,7 +49,7 @@ def register():
 
         msg = Message(
             subject="Confirm your Email",
-            sender=getenv("MAIL_USERNAME"),
+            sender=["PC Builder", getenv("MAIL_USERNAME")],
             recipients=[email],
             html=render_template(
                 "email_validation.html", name=data["name"].title(), link=link
