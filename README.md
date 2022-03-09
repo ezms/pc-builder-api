@@ -8,18 +8,18 @@ Base url: https://pc-builder-api-v2.herokuapp.com/
 
 #### Framework
 
--   Flask
+- Flask
 
 #### Libraries
 
--   Flask-SQLAlchemy <br>
--   Flask-JWT-Extended <br>
--   gunicorn <br>
--   pdfkit <br>
--   python-dotenv <br>
--   Migrations <br>
--   Blueprints <br>
--   Dataclasses
+- Flask-SQLAlchemy <br>
+- Flask-JWT-Extended <br>
+- gunicorn <br>
+- pdfkit <br>
+- python-dotenv <br>
+- Migrations <br>
+- Blueprints <br>
+- Dataclasses
 
 <br>
 
@@ -79,10 +79,10 @@ Exemplo de requisição:
 
 ```json
 {
-	"name": "John Doe",
-	"email": "john@email.com",
-	"password": "doe.john",
-	"cpf": "55555555555"
+  "name": "John Doe",
+  "email": "john@email.com",
+  "password": "doe.john",
+  "cpf": "55555555555"
 }
 ```
 
@@ -90,16 +90,16 @@ Dessa requisição é esperado um retorno com os dados do usuário cadastrado, c
 
 ```json
 {
-	"user_id": 1,
-	"name": "John Doe",
-	"email": "john@email.com",
-	"cpf": "55555555555",
-	"addresses": [],
-	"orders": [],
-	"cart": {
-		"total": 0.0,
-		"products": []
-	}
+  "user_id": 1,
+  "name": "John Doe",
+  "email": "john@email.com",
+  "cpf": "55555555555",
+  "addresses": [],
+  "orders": [],
+  "cart": {
+    "total": 0.0,
+    "products": []
+  }
 }
 ```
 
@@ -110,12 +110,13 @@ Dessa requisição é esperado um retorno com os dados do usuário cadastrado, c
 <i> POST /user/login </i>
 
 Essa rota serve para fazer login de um usuário já cadastrado no banco de dados, sendo obrigatório passar no corpo da requisição o email, e senha do usuário. <br>
+Para fazer login, o usuário cadastrado deve confirmar o email que foi registrado na rota de registro. <br>
 Exemplo de requisição:
 
 ```json
 {
-	"email": "john@email.com",
-	"password": "doe.john"
+  "email": "john@email.com",
+  "password": "doe.john"
 }
 ```
 
@@ -123,7 +124,7 @@ Dessa requisição é esperado um retorno com o token de acesso do usuário, com
 
 ```json
 {
-	"access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY0NjQxODA3NCwianRpIjoiNWE0ZDgzODMtZThlNS00MWYzLWEwMDItN2ZlODQzOTg0YzI5IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6eyJ1c2VyX2lkIjo1LCJuYW1lIjoiSm9obiBEb2UiLCJlbWFpbCI6ImpvaG5AZW1haWwuY29tIiwicGFzc3dvcmRfaGFzaCI6InBia2RmMjpzaGEyNTY6MjYwMDAwJGEwTHBMOTJkdWE4ZkVTJDhlMDI3NzgwZTI5NzBiZDkxYTdiMWRjOTg0YWY4ZmJlODdkN2NjODNhODcwMWZhNzY5OWNhOTlhNjY2NWExY2UiLCJjcGYiOiI1NTU1NTU1NTU1NSIsImFkZHJlc3NlcyI6W10sIm9yZGVycyI6W119LCJuYmYiOjE2NDY0MTgwNzQsImV4cCI6MTY0NjUwNDQ3NH0.6X5CEa9cCiauP3qjy7eKvDsVMHr2DGpkPFrRI3YFtRw"
+  "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY0NjQxODA3NCwianRpIjoiNWE0ZDgzODMtZThlNS00MWYzLWEwMDItN2ZlODQzOTg0YzI5IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6eyJ1c2VyX2lkIjo1LCJuYW1lIjoiSm9obiBEb2UiLCJlbWFpbCI6ImpvaG5AZW1haWwuY29tIiwicGFzc3dvcmRfaGFzaCI6InBia2RmMjpzaGEyNTY6MjYwMDAwJGEwTHBMOTJkdWE4ZkVTJDhlMDI3NzgwZTI5NzBiZDkxYTdiMWRjOTg0YWY4ZmJlODdkN2NjODNhODcwMWZhNzY5OWNhOTlhNjY2NWExY2UiLCJjcGYiOiI1NTU1NTU1NTU1NSIsImFkZHJlc3NlcyI6W10sIm9yZGVycyI6W119LCJuYmYiOjE2NDY0MTgwNzQsImV4cCI6MTY0NjUwNDQ3NH0.6X5CEa9cCiauP3qjy7eKvDsVMHr2DGpkPFrRI3YFtRw"
 }
 ```
 
@@ -139,12 +140,12 @@ Exemplo de resposta dessa rota:
 
 ```json
 {
-	"user_id": 1,
-	"name": "John Doe",
-	"email": "john@email.com",
-	"cpf": "55555555555",
-	"addresses": [],
-	"orders": []
+  "user_id": 1,
+  "name": "John Doe",
+  "email": "john@email.com",
+  "cpf": "55555555555",
+  "addresses": [],
+  "orders": []
 }
 ```
 
@@ -159,7 +160,7 @@ Exemplo de requisição:
 
 ```json
 {
-	"email": "johndoe@email.com"
+  "email": "johndoe@email.com"
 }
 ```
 
@@ -167,10 +168,10 @@ Exemplo de resposta dessa rota:
 
 ```json
 {
-	"name": "John Doe",
-	"email": "johndoe@email.com",
-	"password": "doe.john",
-	"cpf": "55555555555"
+  "name": "John Doe",
+  "email": "johndoe@email.com",
+  "password": "doe.john",
+  "cpf": "55555555555"
 }
 ```
 
@@ -202,7 +203,7 @@ Exemplo de requisição:
 
 ```json
 {
-	"name": "Processadores"
+  "name": "Processadores"
 }
 ```
 
@@ -210,8 +211,8 @@ Dessa requisição é esperado um retorno com os dados da categoria cadastrada, 
 
 ```json
 {
-	"category_id": 1,
-	"name": "Processadores"
+  "category_id": 1,
+  "name": "Processadores"
 }
 ```
 
@@ -230,14 +231,14 @@ Exemplo de resposta dessa requisição:
 
 ```json
 [
-	{
-		"category_id": 1,
-		"name": "Processadores"
-	},
-	{
-		"category_id": 2,
-		"name": "Periféricos"
-	}
+  {
+    "category_id": 1,
+    "name": "Processadores"
+  },
+  {
+    "category_id": 2,
+    "name": "Periféricos"
+  }
 ]
 ```
 
@@ -250,8 +251,8 @@ Exemplo de resposta dessa requisição:
 
 ```json
 {
-	"category_id": 1,
-	"name": "Processadores"
+  "category_id": 1,
+  "name": "Processadores"
 }
 ```
 
@@ -268,7 +269,7 @@ Exemplo de requisição:
 
 ```json
 {
-	"name": "Armazenamentos"
+  "name": "Armazenamentos"
 }
 ```
 
@@ -276,8 +277,8 @@ Exemplo de resposta dessa rota:
 
 ```json
 {
-	"category_id": 1,
-	"name": "Armazenamentos"
+  "category_id": 1,
+  "name": "Armazenamentos"
 }
 ```
 
@@ -310,11 +311,11 @@ Exemplo de requisição:
 
 ```json
 {
-	"model": "Processador AMD Ryzen 5 3600, AM4, 3.6GHz",
-	"img": "www.img.com.br",
-	"price": 1678.31,
-	"description": "Marca: AMD, Modelo: Ryzen 5 3600, Cores: 6, Threads: 12, Socket: AM4, Base Clock: 3.6, Cooler Box: Incluso, GPU Integrada: Não, Consumo: 65 Watts",
-	"category": "Processadores"
+  "model": "Processador AMD Ryzen 5 3600, AM4, 3.6GHz",
+  "img": "www.img.com.br",
+  "price": 1678.31,
+  "description": "Marca: AMD, Modelo: Ryzen 5 3600, Cores: 6, Threads: 12, Socket: AM4, Base Clock: 3.6, Cooler Box: Incluso, GPU Integrada: Não, Consumo: 65 Watts",
+  "category": "Processadores"
 }
 ```
 
@@ -322,11 +323,11 @@ Dessa requisição é esperado um retorno com os dados do produto cadastrado, co
 
 ```json
 {
-	"product_id": 1,
-	"model": "Processador AMD Ryzen 5 3600, AM4, 3.6GHz",
-	"img": "www.img.com.br",
-	"price": 1678.31,
-	"description": "Marca: AMD, Modelo: Ryzen 5 3600, Cores: 6, Threads: 12, Socket: AM4, Base Clock: 3.6, Cooler Box: Incluso, GPU Integrada: Não, Consumo: 65 Watts"
+  "product_id": 1,
+  "model": "Processador AMD Ryzen 5 3600, AM4, 3.6GHz",
+  "img": "www.img.com.br",
+  "price": 1678.31,
+  "description": "Marca: AMD, Modelo: Ryzen 5 3600, Cores: 6, Threads: 12, Socket: AM4, Base Clock: 3.6, Cooler Box: Incluso, GPU Integrada: Não, Consumo: 65 Watts"
 }
 ```
 
@@ -343,13 +344,13 @@ Exemplo de resposta dessa requisição:
 
 ```json
 [
-	{
-		"product_id": 1,
-		"model": "Processador AMD Ryzen 5 3600, AM4, 3.6GHz",
-		"img": "www.img.com.br",
-		"price": 1678.31,
-		"description": "Marca: AMD, Modelo: Ryzen 5 3600, Cores: 6, Threads: 12, Socket: AM4, Base Clock: 3.6, Cooler Box: Incluso, GPU Integrada: Não, Consumo: 65 Watts"
-	}
+  {
+    "product_id": 1,
+    "model": "Processador AMD Ryzen 5 3600, AM4, 3.6GHz",
+    "img": "www.img.com.br",
+    "price": 1678.31,
+    "description": "Marca: AMD, Modelo: Ryzen 5 3600, Cores: 6, Threads: 12, Socket: AM4, Base Clock: 3.6, Cooler Box: Incluso, GPU Integrada: Não, Consumo: 65 Watts"
+  }
 ]
 ```
 
@@ -362,11 +363,11 @@ Exemplo de resposta dessa requisição:
 
 ```json
 {
-	"product_id": 1,
-	"model": "Processador AMD Ryzen 5 3600, AM4, 3.6GHz",
-	"img": "www.img.com.br",
-	"price": 1678.31,
-	"description": "Marca: AMD, Modelo: Ryzen 5 3600, Cores: 6, Threads: 12, Socket: AM4, Base Clock: 3.6, Cooler Box: Incluso, GPU Integrada: Não, Consumo: 65 Watts"
+  "product_id": 1,
+  "model": "Processador AMD Ryzen 5 3600, AM4, 3.6GHz",
+  "img": "www.img.com.br",
+  "price": 1678.31,
+  "description": "Marca: AMD, Modelo: Ryzen 5 3600, Cores: 6, Threads: 12, Socket: AM4, Base Clock: 3.6, Cooler Box: Incluso, GPU Integrada: Não, Consumo: 65 Watts"
 }
 ```
 
@@ -382,8 +383,8 @@ Exemplo de requisição:
 
 ```json
 {
-	"model": "Processador AMD Ryzen 7 5800X, AM4, 3.8GHz",
-	"description": "Marca: AMD, Modelo: Ryzen 7 5800X, Cores: 8, Threads: 16, Socket: AM4, Base Clock: 3.8, Cooler Box: Incluso, GPU Integrada: Não, Consumo: 105 Watts"
+  "model": "Processador AMD Ryzen 7 5800X, AM4, 3.8GHz",
+  "description": "Marca: AMD, Modelo: Ryzen 7 5800X, Cores: 8, Threads: 16, Socket: AM4, Base Clock: 3.8, Cooler Box: Incluso, GPU Integrada: Não, Consumo: 105 Watts"
 }
 ```
 
@@ -391,11 +392,11 @@ Exemplo de resposta dessa rota:
 
 ```json
 {
-	"product_id": 1,
-	"model": "Processador AMD Ryzen 7 5800X, AM4, 3.8GHz",
-	"img": "www.img.com.br",
-	"price": 1678.31,
-	"description": "Marca: AMD, Modelo: Ryzen 7 5800X, Cores: 8, Threads: 16, Socket: AM4, Base Clock: 3.8, Cooler Box: Incluso, GPU Integrada: Não, Consumo: 105 Watts"
+  "product_id": 1,
+  "model": "Processador AMD Ryzen 7 5800X, AM4, 3.8GHz",
+  "img": "www.img.com.br",
+  "price": 1678.31,
+  "description": "Marca: AMD, Modelo: Ryzen 7 5800X, Cores: 8, Threads: 16, Socket: AM4, Base Clock: 3.8, Cooler Box: Incluso, GPU Integrada: Não, Consumo: 105 Watts"
 }
 ```
 
@@ -428,11 +429,11 @@ Exemplo de resposta da requisição:
 
 ```json
 {
-	"product_id": 2,
-	"model": "Processador AMD Ryzen 5 3600, AM4, 3.6GHz",
-	"img": "www.img.com.br",
-	"price": 1678.31,
-	"description": "Marca: AMD, Modelo: Ryzen 5 3600, Cores: 6, Threads: 12, Socket: AM4, Base Clock: 3.6, Cooler Box: Incluso, GPU Integrada: Não, Consumo: 65 Watts"
+  "product_id": 2,
+  "model": "Processador AMD Ryzen 5 3600, AM4, 3.6GHz",
+  "img": "www.img.com.br",
+  "price": 1678.31,
+  "description": "Marca: AMD, Modelo: Ryzen 5 3600, Cores: 6, Threads: 12, Socket: AM4, Base Clock: 3.6, Cooler Box: Incluso, GPU Integrada: Não, Consumo: 65 Watts"
 }
 ```
 
@@ -447,10 +448,10 @@ Exemplo de resposta da requisição:
 
 ```json
 {
-	"order_id": 2,
-	"total": 1678.31,
-	"timestamp": "Tue, 08 Mar 2022 12:09:43 GMT",
-	"user_id": 22
+  "order_id": 2,
+  "total": 1678.31,
+  "timestamp": "Tue, 08 Mar 2022 12:09:43 GMT",
+  "user_id": 22
 }
 ```
 
@@ -466,16 +467,16 @@ Exemplo de resposta da requisição:
 
 ```json
 {
-	"total": 1678.31,
-	"products": [
-		{
-			"model": "Processador AMD Ryzen 5 3600, AM4, 3.6GHz",
-			"price": 1678.31,
-			"img": "www.img.com.br",
-			"description": "Marca: AMD, Modelo: Ryzen 5 3600, Cores: 6, Threads: 12, Socket: AM4, Base Clock: 3.6, Cooler Box: Incluso, GPU Integrada: Não, Consumo: 65 Watts",
-			"product_id": 2
-		}
-	]
+  "total": 1678.31,
+  "products": [
+    {
+      "model": "Processador AMD Ryzen 5 3600, AM4, 3.6GHz",
+      "price": 1678.31,
+      "img": "www.img.com.br",
+      "description": "Marca: AMD, Modelo: Ryzen 5 3600, Cores: 6, Threads: 12, Socket: AM4, Base Clock: 3.6, Cooler Box: Incluso, GPU Integrada: Não, Consumo: 65 Watts",
+      "product_id": 2
+    }
+  ]
 }
 ```
 
@@ -506,11 +507,11 @@ Exemplo de requisição:
 
 ```json
 {
-	"cep": "20221410",
-	"cidade": "Rio de Janeiro",
-	"estado": "RJ",
-	"logradouro": "Rua Alexandre Mackenzie",
-	"numero": 15
+  "cep": "20221410",
+  "cidade": "Rio de Janeiro",
+  "estado": "RJ",
+  "logradouro": "Rua Alexandre Mackenzie",
+  "numero": 15
 }
 ```
 
@@ -518,11 +519,11 @@ Dessa requisição é esperado um retorno com os dados do endereço cadastrado, 
 
 ```json
 {
-	"zip_code": "20221410",
-	"state": "RJ",
-	"city": "Rio de Janeiro",
-	"public_place": "Rua Alexandre Mackenzie",
-	"number": 15
+  "zip_code": "20221410",
+  "state": "RJ",
+  "city": "Rio de Janeiro",
+  "public_place": "Rua Alexandre Mackenzie",
+  "number": 15
 }
 ```
 
@@ -538,14 +539,14 @@ Exemplo de resposta dessa requisição:
 
 ```json
 [
-	{
-		"address_id": 9,
-		"zip_code": "20221410",
-		"state": "RJ",
-		"city": "Rio de Janeiro",
-		"public_place": "Rua Alexandre Mackenzie",
-		"number": 15
-	}
+  {
+    "address_id": 9,
+    "zip_code": "20221410",
+    "state": "RJ",
+    "city": "Rio de Janeiro",
+    "public_place": "Rua Alexandre Mackenzie",
+    "number": 15
+  }
 ]
 ```
 
@@ -562,11 +563,11 @@ Exemplo de requisição:
 
 ```json
 {
-	"zip_code": "20221410",
-	"state": "RJ",
-	"city": "Rio de Janeiro",
-	"public_place": "Rua Vinicius de Morais",
-	"number": 25
+  "zip_code": "20221410",
+  "state": "RJ",
+  "city": "Rio de Janeiro",
+  "public_place": "Rua Vinicius de Morais",
+  "number": 25
 }
 ```
 
@@ -596,18 +597,18 @@ Exemplo de resposta dessa requisição:
 
 ```json
 [
-	{
-		"order_id": 1,
-		"total": 1678.31,
-		"timestamp": "Tue, 08 Mar 2022 12:06:22 GMT",
-		"user_id": 22
-	},
-	{
-		"order_id": 2,
-		"total": 1678.31,
-		"timestamp": "Tue, 08 Mar 2022 12:09:43 GMT",
-		"user_id": 22
-	}
+  {
+    "order_id": 1,
+    "total": 1678.31,
+    "timestamp": "Tue, 08 Mar 2022 12:06:22 GMT",
+    "user_id": 22
+  },
+  {
+    "order_id": 2,
+    "total": 1678.31,
+    "timestamp": "Tue, 08 Mar 2022 12:09:43 GMT",
+    "user_id": 22
+  }
 ]
 ```
 
@@ -619,18 +620,18 @@ Exemplo de resposta dessa requisição:
 
 ```json
 {
-	"order_id": 1,
-	"total": 1678.31,
-	"timestamp": "Tue, 08 Mar 2022 12:06:22 GMT",
-	"user_id": 22,
-	"products": [
-		{
-			"model": "Processador AMD Ryzen 5 3600, AM4, 3.6GHz",
-			"price": 1678.31,
-			"img": "www.img.com.br",
-			"description": "Marca: AMD, Modelo: Ryzen 5 3600, Cores: 6, Threads: 12, Socket: AM4, Base Clock: 3.6, Cooler Box: Incluso, GPU Integrada: Não, Consumo: 65 Watts",
-			"product_id": 2
-		}
-	]
+  "order_id": 1,
+  "total": 1678.31,
+  "timestamp": "Tue, 08 Mar 2022 12:06:22 GMT",
+  "user_id": 22,
+  "products": [
+    {
+      "model": "Processador AMD Ryzen 5 3600, AM4, 3.6GHz",
+      "price": 1678.31,
+      "img": "www.img.com.br",
+      "description": "Marca: AMD, Modelo: Ryzen 5 3600, Cores: 6, Threads: 12, Socket: AM4, Base Clock: 3.6, Cooler Box: Incluso, GPU Integrada: Não, Consumo: 65 Watts",
+      "product_id": 2
+    }
+  ]
 }
 ```
