@@ -116,24 +116,23 @@ def confirm_email(token):
 def login():
 
     data = request.get_json()
-    data = {key: val for key, val in data.items() if key in ["email", "password"]}
 
-    missing_fields = [x for x in ["email", "password"] if x not in data.keys()]
-
-    if missing_fields:
-        return {"missing fields": missing_fields}, HTTPStatus.BAD_REQUEST
-
-    for key, val in data.items():
-        if type(val) is not str:
-            return {"error": f"{{{key}}} value must be string"}, HTTPStatus.BAD_REQUEST
+    try:
+        validate_body(data, email=str, password=str)
+    except BadRequest as err:
+        return err.description, HTTPStatus.UNPROCESSABLE_ENTITY
 
     email = data.get("email")
     password = data.get("password")
 
-    user: UserModel = UserModel.query.filter_by(email=email.lower()).first()
+    try:
+        user: UserModel = UserModel.query.filter_by(email=email.lower()).first_or_404()
 
-    if not user:
+    except NotFound:
         return {"error": "email not found"}, HTTPStatus.NOT_FOUND
+
+    if not user.confirmed_email:
+        return {"error": "Email is not verified"}, HTTPStatus.UNAUTHORIZED
 
     if user.verify_password(password):
         access_token = create_access_token(
