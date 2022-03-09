@@ -108,6 +108,13 @@ def update_product(id):
     session = db.session
     data = request.get_json()
 
+    token = request.headers["Authorization"].split(" ")[1]
+
+    if not token:
+        return {"error": "missing admin token"}, HTTPStatus.BAD_REQUEST
+    elif token != os.getenv("DATABASE_ADMIN_TOKEN"):
+        return {"error": "invalid admin token"}, HTTPStatus.FORBIDDEN
+
     try:
         if not data:
             raise BadRequest(description="Request body cannot be empty")
