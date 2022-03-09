@@ -1,5 +1,5 @@
-from http import HTTPStatus
 import os
+from http import HTTPStatus
 
 from flask import jsonify, request
 from psycopg2.errors import UniqueViolation
@@ -8,6 +8,8 @@ from werkzeug.exceptions import BadRequest
 
 from app.core.database import db
 from app.models.category_model import CategoryModel
+from app.models.product_model import ProductModel
+from app.services.products_query_services import get_products_for_category
 from app.services.validate_body_service import validate_body
 
 
@@ -58,7 +60,14 @@ def get_category_by_id(id):
     if category == None:
         return {"error": "Category not found!"}, HTTPStatus.NOT_FOUND
 
-    return jsonify(category), HTTPStatus.OK
+    products = get_products_for_category(
+        CategoryModel, id, ProductModel.category_id, CategoryModel.category_id
+    )
+
+    category_asdict = category.asdict()
+    category_asdict["products"] = products
+
+    return jsonify(category_asdict), HTTPStatus.OK
 
 
 def update_category(id):

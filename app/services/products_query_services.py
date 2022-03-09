@@ -25,3 +25,24 @@ def get_all_products_query(main_table, pivot_table, pivot_table_id, main_table_i
     products = [dict(zip(column_names, prod)) for prod in products.all()]
 
     return products
+
+
+def get_products_for_category(main_table, category_id, pivot_table_id, main_table_id):
+    products: Query = (
+        db.session.query(
+            ProductModel.model,
+            ProductModel.price,
+            ProductModel.img,
+            ProductModel.description,
+            ProductModel.product_id,
+        )
+        .select_from(ProductModel)
+        .join(main_table)
+        .filter(category_id == main_table_id)
+    )
+
+    column_names = [column["name"] for column in products.column_descriptions]
+
+    products = [dict(zip(column_names, prod)) for prod in products.all()]
+
+    return products
