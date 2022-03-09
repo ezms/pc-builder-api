@@ -1,5 +1,6 @@
 import os
 from http import HTTPStatus
+import os
 
 from flask import jsonify, request
 from psycopg2.errors import UniqueViolation
@@ -147,6 +148,13 @@ def update_product(id):
 
 def delete_product(id):
     session = db.session
+
+    token = request.headers["Authorization"].split(" ")[1]
+
+    if not token:
+        return {"error": "missing admin token"}, HTTPStatus.BAD_REQUEST
+    elif token != os.getenv("DATABASE_ADMIN_TOKEN"):
+        return {"error": "invalid admin token"}, HTTPStatus.FORBIDDEN
 
     product = ProductModel.query.filter_by(product_id=id).one_or_none()
     if product == None:
