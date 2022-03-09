@@ -349,7 +349,17 @@ Exemplo de resposta dessa requisição:
     "model": "Processador AMD Ryzen 5 3600, AM4, 3.6GHz",
     "img": "www.img.com.br",
     "price": 1678.31,
-    "description": "Marca: AMD, Modelo: Ryzen 5 3600, Cores: 6, Threads: 12, Socket: AM4, Base Clock: 3.6, Cooler Box: Incluso, GPU Integrada: Não, Consumo: 65 Watts"
+    "description": [
+      "Marca: AMD",
+      "Modelo: Ryzen 5 3600",
+      "Cores: 6",
+      "Threads: 12",
+      "Socket: AM4",
+      "Base Clock: 3.6",
+      "Cooler Box: Incluso",
+      "GPU Integrada: Não",
+      "Consumo: 65 Watts"
+    ]
   }
 ]
 ```
@@ -367,7 +377,17 @@ Exemplo de resposta dessa requisição:
   "model": "Processador AMD Ryzen 5 3600, AM4, 3.6GHz",
   "img": "www.img.com.br",
   "price": 1678.31,
-  "description": "Marca: AMD, Modelo: Ryzen 5 3600, Cores: 6, Threads: 12, Socket: AM4, Base Clock: 3.6, Cooler Box: Incluso, GPU Integrada: Não, Consumo: 65 Watts"
+  "description": [
+    "Marca: AMD",
+    "Modelo: Ryzen 5 3600",
+    "Cores: 6",
+    "Threads: 12",
+    "Socket: AM4",
+    "Base Clock: 3.6",
+    "Cooler Box: Incluso",
+    "GPU Integrada: Não",
+    "Consumo: 65 Watts"
+  ]
 }
 ```
 
