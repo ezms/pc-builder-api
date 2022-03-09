@@ -4,7 +4,107 @@
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="icon" href="../static/favicon.png" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap"
+			rel="stylesheet"
+		/>
+		<style>
+			* {
+				box-sizing: border-box;
+				font-family: 'Oswald', sans-serif;
+			}
+
+			header,
+			footer {
+				display: flex;
+				background: #212229;
+				border-radius: 8px;
+				max-width: 500px;
+				width: 100%;
+				padding: 10px;
+				padding-right: 10px;
+				color: white;
+			}
+
+			.banner {
+				display: flex;
+			}
+
+			header img {
+				width: 100px;
+				height: 55px;
+				margin-right: 10px;
+			}
+
+			header h1 {
+				margin: 0;
+				line-height: 55px;
+			}
+
+			footer,
+			.link-button {
+				margin-top: 2.5em;
+			}
+
+			.link-button {
+				display: grid;
+				place-content: center;
+				max-width: 500px;
+				width: 35%;
+				height: 50px;
+				background: linear-gradient(90deg, #ff55bb 0%, #ff4343 100%);
+				border: none;
+				border-radius: 8px;
+				color: white;
+				font-weight: 600;
+				font-size: 16px;
+				text-align: center;
+				text-decoration: none;
+			}
+
+			.link-button:hover {
+				background-color: transparent;
+				border: solid 2px transparent;
+				background-image: linear-gradient(#212229, #212229),
+					radial-gradient(circle at top left, #ff55bb, #ff4343);
+				background-origin: border-box;
+				background-clip: content-box, border-box;
+			}
+
+			footer {
+				border-radius: 0px 0px 5px 5px;
+			}
+
+			footer span {
+				line-height: 50px;
+			}
+		</style>
 		<title>PC Builder | Confirme seu email</title>
 	</head>
-	<body></body>
+	<body>
+		<header>
+			<div class="banner">
+				<img
+					src="https://pc-builder-capstone-q2.vercel.app/static/media/logo.91001f55.png"
+					alt=""
+				/>
+				<h1 id="header-logo-title">PC Builder</h1>
+			</div>
+		</header>
+		<main>
+			<h1>Olá, {{name}}</h1>
+			<p>Para verificar seu email por favor acesse o link abaixo: 😃</p>
+			<div>
+				<a class="link-button" href="{{link}}">
+					Clique aqui para confirmar seu email!
+				</a>
+			</div>
+		</main>
+		<footer>
+			<span>Equipe PC Builder</span>
+		</footer>
+	</body>
 </html>
