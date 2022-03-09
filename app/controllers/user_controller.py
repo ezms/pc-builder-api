@@ -116,16 +116,11 @@ def confirm_email(token):
 def login():
 
     data = request.get_json()
-    data = {key: val for key, val in data.items() if key in ["email", "password"]}
 
-    missing_fields = [x for x in ["email", "password"] if x not in data.keys()]
-
-    if missing_fields:
-        return {"missing fields": missing_fields}, HTTPStatus.BAD_REQUEST
-
-    for key, val in data.items():
-        if type(val) is not str:
-            return {"error": f"{{{key}}} value must be string"}, HTTPStatus.BAD_REQUEST
+    try:
+        validate_body(data, email=str, password=str)
+    except BadRequest as err:
+        return err.description, HTTPStatus.UNPROCESSABLE_ENTITY
 
     email = data.get("email")
     password = data.get("password")
