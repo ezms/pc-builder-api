@@ -110,7 +110,7 @@ def confirm_email(token):
         db.session.add(filtered_user)
         db.session.commit()
 
-        return jsonify(True), HTTPStatus.OK
+        return render_template("redirect_to_store.html"), HTTPStatus.OK
     except NotFound as err:
         return {"error": err.description}, HTTPStatus.NOT_FOUND
     except SignatureExpired:
