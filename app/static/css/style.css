@@ -286,16 +286,50 @@ li > h4 {
 }
 
 table {
-  border: 1px solid gray;
+  max-width: 500px;
+  width: 100%;
+}
+table,
+th,
+tr,
+td {
+  border: 1px solid #a7a7a7;
   border-collapse: collapse;
 }
-
-table > tr,
-td,
-th {
-  border: 1px solid gray;
+td {
+  background: #212229;
+  color: #ffffff;
+  padding: 10px;
+}
+span {
+  margin: 20px 0;
+  display: block;
 }
 
-table > td {
+#banner {
+  margin: auto;
+  display: flex;
+}
+
+header {
+  background: #212229;
+  width: 100%;
+  max-width: 500px;
+  display: flex;
   padding: 10px;
+  box-sizing: border-box;
+  border-radius: 8px;
+  color: white;
+  padding-right: 10px;
+}
+
+header img {
+  width: 100px;
+  height: 55px;
+  margin-right: 10px;
+}
+
+header h1 {
+  margin: 0;
+  line-height: 55px;
 }
