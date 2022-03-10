@@ -4,6 +4,7 @@ from datetime import datetime
 from flask import current_app, render_template
 from flask_jwt_extended import get_jwt_identity
 from flask_mail import Mail, Message
+from pdfkit import from_string
 
 from app.core.database import db
 from app.models.order_model import OrdersModel
@@ -44,6 +45,18 @@ def send_email_to_client(address, order_id, date):
         "Estado": address.state,
     }
 
+    pdf = from_string(
+        render_template(
+            "order.html",
+            products=products,
+            total="R$ %.2f" % total,
+            username=user["name"],
+            date=datetime.strftime(date, "%d/%m/%Y às %H:%M:%S"),
+            address=address,
+        ),
+        False,
+    )
+
     msg = Message(
         subject="Resumo de Pedido - PC Builder",
         sender=["PC Builder", os.getenv("MAIL_USERNAME")],
@@ -58,4 +71,5 @@ def send_email_to_client(address, order_id, date):
         ),
     )
 
+    msg.attach("pc-builder-nfe.pdf", "application/pdf", pdf)
     mail.send(msg)

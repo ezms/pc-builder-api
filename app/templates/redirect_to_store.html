@@ -4,21 +4,13 @@
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link rel="icon" href="../static/favicon.png" />
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link
-			href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap"
-			rel="stylesheet"
-		/>
 		<style>
 			* {
 				box-sizing: border-box;
 				font-family: 'Oswald', sans-serif;
 			}
 
-			header,
-			footer {
+			header {
 				display: flex;
 				background: #212229;
 				border-radius: 8px;
@@ -27,10 +19,6 @@
 				padding: 10px;
 				padding-right: 10px;
 				color: white;
-			}
-
-			.banner {
-				display: flex;
 			}
 
 			header img {
@@ -44,17 +32,13 @@
 				line-height: 55px;
 			}
 
-			footer,
-			.link-button {
-				margin-top: 2.5em;
-			}
-
 			.link-button {
 				display: grid;
 				place-content: center;
 				max-width: 500px;
 				width: 35%;
 				height: 50px;
+				margin-top: 2.5em;
 				background: linear-gradient(90deg, #ff55bb 0%, #ff4343 100%);
 				border: none;
 				border-radius: 8px;
@@ -76,13 +60,14 @@
 
 			footer {
 				border-radius: 0px 0px 5px 5px;
+				margin-top: 2.5em;
 			}
 
 			footer span {
 				line-height: 50px;
 			}
 		</style>
-		<title>PC Builder | Confirme seu email</title>
+		<title>Document</title>
 	</head>
 	<body>
 		<header>
@@ -95,16 +80,16 @@
 			</div>
 		</header>
 		<main>
-			<h1>Olá, {{name}}</h1>
-			<p>Para verificar seu email por favor acesse o link abaixo: 😃</p>
+			<p>Email verificado com sucesso!!! 🎉</p>
 			<div>
-				<a class="link-button" href="{{link}}">
-					Clique aqui para confirmar seu email!
+				<a
+					class="link-button"
+					href="https://pc-builder-capstone-q2-three.vercel.app"
+				>
+					Voltar para a loja
 				</a>
 			</div>
 		</main>
-		<footer>
-			<span>Equipe PC Builder</span>
-		</footer>
+		<footer><span>Equipe PC Builder</span></footer>
 	</body>
 </html>

@@ -1,10 +1,10 @@
-# <b> PC Builder API </b>
+# <b> <img style="width: 50px;" src="https://pc-builder-api-v2.herokuapp.com/static/logo.png"/> PC Builder API </b>
 
-## <b> URL base da API </b>
+## <b> 🌐 URL base da API </b>
 
-https://pc-builder-api-v2.herokuapp.com/
+Base url: https://pc-builder-api-v2.herokuapp.com/
 
-## <b> Tecnologias utilizadas </b>
+## <b> 🛠 Tecnologias utilizadas </b>
 
 #### Framework
 
@@ -23,15 +23,42 @@ https://pc-builder-api-v2.herokuapp.com/
 
 <br>
 
-## <b> > Inicialização da API </b>
+## 🛠 Instalação
 
-Para começar a utilizar a API Leads, copie a URL base da aplicação e use-a na sua ferramenta cliente de API de preferência (recomendo o Insomnia), complementando a URL com os endpoints da aplicação, explicados a seguir.
+<p>Caso queira instalar a API para rodar os testes localmente em sua máquina, siga os seguintes passos:</p>
+
+1 - Instale um ambiente virtual (<code>venv</code>) na raíz do projeto
+
+```sh
+$ python -m venv venv && source venv/bin/activate
+```
+
+2 - Instale as dependências presentes no arquivo <code>requirements.txt</code>:
+<br>: no terminal :
+
+```
+$ pip install -r requirements.txt
+```
+
+2 - Em seguida, inicie a aplicação flask:
+<br>: no terminal :
+
+```
+$ flask run
+```
+
+<hr>
+<br>
+
+## <b> 🌄 Inicialização da API </b>
+
+Para começar a utilizar a API, copie a URL base da aplicação e use-a na sua ferramenta cliente de API de preferência (recomendo o Insomnia), complementando a URL com os endopints da aplicação, explicados a seguir.
 
 <br>
 
 <br>
 
-## <b> > Endpoints </b>
+## <b> 🔚 Endpoints </b>
 
 Existem 25 endpoints nessa aplicação: 5 para gerenciamento de usuário, 5 para gerenciamento de categorias, 5 para gerenciamento de produtos, 4 para gerenciamento de carrinho, 4 para gerenciamento de endereços, 2 para gerenciamento de pedidos.
 
@@ -83,6 +110,7 @@ Dessa requisição é esperado um retorno com os dados do usuário cadastrado, c
 <i> POST /user/login </i>
 
 Essa rota serve para fazer login de um usuário já cadastrado no banco de dados, sendo obrigatório passar no corpo da requisição o email, e senha do usuário. <br>
+Para fazer login, o usuário cadastrado deve confirmar o email que foi registrado na rota de registro. <br>
 Exemplo de requisição:
 
 ```json
@@ -321,7 +349,17 @@ Exemplo de resposta dessa requisição:
     "model": "Processador AMD Ryzen 5 3600, AM4, 3.6GHz",
     "img": "www.img.com.br",
     "price": 1678.31,
-    "description": "Marca: AMD, Modelo: Ryzen 5 3600, Cores: 6, Threads: 12, Socket: AM4, Base Clock: 3.6, Cooler Box: Incluso, GPU Integrada: Não, Consumo: 65 Watts"
+    "description": [
+      "Marca: AMD",
+      "Modelo: Ryzen 5 3600",
+      "Cores: 6",
+      "Threads: 12",
+      "Socket: AM4",
+      "Base Clock: 3.6",
+      "Cooler Box: Incluso",
+      "GPU Integrada: Não",
+      "Consumo: 65 Watts"
+    ]
   }
 ]
 ```
@@ -339,7 +377,17 @@ Exemplo de resposta dessa requisição:
   "model": "Processador AMD Ryzen 5 3600, AM4, 3.6GHz",
   "img": "www.img.com.br",
   "price": 1678.31,
-  "description": "Marca: AMD, Modelo: Ryzen 5 3600, Cores: 6, Threads: 12, Socket: AM4, Base Clock: 3.6, Cooler Box: Incluso, GPU Integrada: Não, Consumo: 65 Watts"
+  "description": [
+    "Marca: AMD",
+    "Modelo: Ryzen 5 3600",
+    "Cores: 6",
+    "Threads: 12",
+    "Socket: AM4",
+    "Base Clock: 3.6",
+    "Cooler Box: Incluso",
+    "GPU Integrada: Não",
+    "Consumo: 65 Watts"
+  ]
 }
 ```
 

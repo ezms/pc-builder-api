@@ -1,4 +1,3 @@
-import os
 from http import HTTPStatus
 import os
 
@@ -89,6 +88,9 @@ def get_all_products():
         populate_product()
         products = ProductModel.query.order_by(ProductModel.product_id).all()
 
+    for prd in products:
+        prd.description = prd.description.split(', ')
+
     return jsonify(products), HTTPStatus.OK
 
 
@@ -97,6 +99,8 @@ def get_product_by_id(id):
     product = ProductModel.query.filter_by(product_id=id).one_or_none()
     if product == None:
         return {"error": "Product not found!"}, HTTPStatus.NOT_FOUND
+
+    product.description = product.description.split(', ')
 
     return jsonify(product), HTTPStatus.OK
 

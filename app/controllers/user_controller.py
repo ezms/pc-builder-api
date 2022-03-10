@@ -3,7 +3,7 @@ from http import HTTPStatus
 from os import getenv
 
 import sqlalchemy
-from flask import current_app, jsonify, request, url_for
+from flask import current_app, jsonify, render_template, request, url_for
 from flask_jwt_extended import (create_access_token, get_jwt_identity,
                                 jwt_required)
 from flask_mail import Message
@@ -45,13 +45,17 @@ def register():
 
         email = data["email"]
         token = secret_url.dumps(email, salt="email-confirm")
-
-        msg = Message(
-            "Confirm your Email", sender=getenv("MAIL_USERNAME"), recipients=[email]
-        )
         link = url_for("api.blueprint_user.confirm_email", token=token, _external=True)
 
-        msg.body = f"Your confirmation link is {link}"
+        msg = Message(
+            subject="Confirm your Email",
+            sender=["PC Builder", getenv("MAIL_USERNAME")],
+            recipients=[email],
+            html=render_template(
+                "email_validation.html", name=data["name"].title(), link=link
+            ),
+        )
+
         current_app.mail.send(msg)
 
         db.session.add(user)
@@ -93,7 +97,9 @@ def confirm_email(token):
         email = secret_url.loads(token, salt="email-confirm", max_age=3600)
 
         filtered_user = (
-            db.session.query(UserModel).filter_by(email=email).first_or_404()
+            db.session.query(UserModel)
+            .filter_by(email=email)
+            .first_or_404(description=f"Email {email} not found on database!")
         )
 
         fields_to_update = {"confirmed_email": True}
@@ -104,7 +110,7 @@ def confirm_email(token):
         db.session.add(filtered_user)
         db.session.commit()
 
-        return jsonify(True), HTTPStatus.OK
+        return render_template("redirect_to_store.html"), HTTPStatus.OK
     except NotFound as err:
         return {"error": err.description}, HTTPStatus.NOT_FOUND
     except SignatureExpired:
@@ -116,24 +122,23 @@ def confirm_email(token):
 def login():
 
     data = request.get_json()
-    data = {key: val for key, val in data.items() if key in ["email", "password"]}
 
-    missing_fields = [x for x in ["email", "password"] if x not in data.keys()]
-
-    if missing_fields:
-        return {"missing fields": missing_fields}, HTTPStatus.BAD_REQUEST
-
-    for key, val in data.items():
-        if type(val) is not str:
-            return {"error": f"{{{key}}} value must be string"}, HTTPStatus.BAD_REQUEST
+    try:
+        validate_body(data, email=str, password=str)
+    except BadRequest as err:
+        return err.description, HTTPStatus.UNPROCESSABLE_ENTITY
 
     email = data.get("email")
     password = data.get("password")
 
-    user: UserModel = UserModel.query.filter_by(email=email.lower()).first()
+    try:
+        user: UserModel = UserModel.query.filter_by(email=email.lower()).first_or_404()
 
-    if not user:
+    except NotFound:
         return {"error": "email not found"}, HTTPStatus.NOT_FOUND
+
+    if not user.confirmed_email:
+        return {"error": "Email is not verified"}, HTTPStatus.UNAUTHORIZED
 
     if user.verify_password(password):
         access_token = create_access_token(
