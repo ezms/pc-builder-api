@@ -7,12 +7,11 @@ from app.core.database import db
 
 @dataclass
 class UserAddressModel(db.Model):
-    user_address_id: int
-    address_id: int
-    user_id: int
 
     __tablename__ = "users_addresses"
 
-    user_address_id = Column(Integer, primary_key=True)
-    address_id = Column(Integer, ForeignKey("addresses.address_id"))
-    user_id = Column(Integer, ForeignKey("users.user_id"))
+    __mapper_args__ = {"confirm_deleted_rows": False}
+
+    user_address_id: int = Column(Integer, primary_key=True)
+    address_id: int = Column(Integer, ForeignKey("addresses.address_id"))
+    user_id: int = Column(Integer, ForeignKey("users.user_id"))

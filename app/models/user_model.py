@@ -19,9 +19,6 @@ class UserModel(db.Model):
     password_hash = Column(String, nullable=False)
     cpf: str = Column(String(11), nullable=False, unique=True)
 
-    def asdict(self):
-        return asdict(self)
-
     addresses: list = relationship(
         "AddressModel", secondary="users_addresses", backref=backref("users")
     )
@@ -40,3 +37,6 @@ class UserModel(db.Model):
 
     def verify_password(self, password_to_compare):
         return check_password_hash(self.password_hash, password_to_compare)
+
+    def asdict(self):
+        return asdict(self)
