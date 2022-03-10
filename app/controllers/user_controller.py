@@ -120,7 +120,6 @@ def confirm_email(token):
 
 
 def login():
-
     data = request.get_json()
 
     try:
@@ -176,10 +175,7 @@ def delete_user():
 
         addressess: Query = UserAddressModel.query.filter_by(user_id=user_id).all()
 
-        for address in addressess:
-            address_query: Query = AddressModel.query.get(address.address_id)
-            db.session.delete(address_query)
-            db.session.delete(address)
+        db.session.delete(cart)
 
         for order in orders:
             order_id = order.order_id
@@ -193,7 +189,11 @@ def delete_user():
 
             db.session.delete(order)
 
-        db.session.delete(cart)
+        for address in addressess:
+            address_query: Query = AddressModel.query.get(address.address_id)
+            db.session.delete(address_query)
+            db.session.delete(address)
+            
         db.session.delete(user)
         db.session.commit()
 
