@@ -1,6 +1,4 @@
 import os
-import platform
-import subprocess
 from datetime import datetime
 
 from flask import current_app, render_template
@@ -13,19 +11,6 @@ from app.models.order_model import OrdersModel
 from app.models.order_product_model import OrdersProductsModel
 from app.models.product_model import ProductModel
 
-
-def _get_pdfkit_config():
-     """wkhtmltopdf lives and functions differently depending on Windows or Linux. We
-      need to support both since we develop on windows but deploy on Heroku.
-
-     Returns:
-         A pdfkit configuration
-     """
-     if platform.system() == 'Windows':
-        return configuration(wkhtmltopdf=os.environ.get('WKHTMLTOPDF_BINARY', 'C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe'))
-     else:
-        WKHTMLTOPDF_CMD = subprocess.Popen(['which', os.environ.get('WKHTMLTOPDF_BINARY', 'wkhtmltopdf')], stdout=subprocess.PIPE).communicate()[0].strip()
-        return configuration(wkhtmltopdf=WKHTMLTOPDF_CMD)
 
 
 def send_email_to_client(address, order_id, date):
@@ -62,6 +47,9 @@ def send_email_to_client(address, order_id, date):
     }
 
 
+    config = configuration(wkhtmltopdf="./bin/wkhtmltopdf")
+
+
     pdf = from_string(
         render_template(
             "order.html",
@@ -71,7 +59,7 @@ def send_email_to_client(address, order_id, date):
             date=datetime.strftime(date, "%d/%m/%Y às %H:%M:%S"),
             address=address,
         ),
-        False, configuration=_get_pdfkit_config()
+        False, configuration=config
     )
 
     msg = Message(
