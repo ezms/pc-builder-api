@@ -68,7 +68,6 @@ def get_address():
 
 @jwt_required()
 def update_address(address_id: int):
-
     user = get_jwt_identity()
     data = request.get_json()
 

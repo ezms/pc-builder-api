@@ -13,7 +13,6 @@ from app.services.products_query_services import get_all_products_query
 
 @jwt_required()
 def get_orders():
-
     user_id = get_jwt_identity()["user_id"]
 
     order_query: Query = (
@@ -25,7 +24,6 @@ def get_orders():
 
 @jwt_required()
 def get_order_by_id(order_id):
-
     user_id = get_jwt_identity()["user_id"]
 
     try:
