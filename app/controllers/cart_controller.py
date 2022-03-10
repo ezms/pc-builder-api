@@ -68,7 +68,6 @@ def cart_checkout():
 
 @jwt_required()
 def add_product_to_cart(product_id):
-
     current_user = get_jwt_identity()
 
     user = UserModel.query.get(current_user["user_id"])

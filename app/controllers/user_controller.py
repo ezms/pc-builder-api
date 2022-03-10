@@ -193,7 +193,7 @@ def delete_user():
             address_query: Query = AddressModel.query.get(address.address_id)
             db.session.delete(address_query)
             db.session.delete(address)
-            
+
         db.session.delete(user)
         db.session.commit()
 
