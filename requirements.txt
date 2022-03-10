@@ -36,3 +36,4 @@ tomli==2.0.1
 typing-extensions==4.1.1
 Werkzeug==2.0.3
 wrapt==1.13.3
+git+git://github.com/johnfraney/wkhtmltopdf-pack.git
