@@ -286,50 +286,16 @@ li > h4 {
 }
 
 table {
-  max-width: 500px;
-  width: 100%;
-}
-table,
-th,
-tr,
-td {
-  border: 1px solid #a7a7a7;
+  border: 1px solid gray;
   border-collapse: collapse;
 }
-td {
-  background: #212229;
-  color: #ffffff;
+
+table > tr,
+td,
+th {
+  border: 1px solid gray;
+}
+
+table > td {
   padding: 10px;
-}
-span {
-  margin: 20px 0;
-  display: block;
-}
-
-#banner {
-  margin: auto;
-  display: flex;
-}
-
-header {
-  background: #212229;
-  width: 100%;
-  max-width: 500px;
-  display: flex;
-  padding: 10px;
-  box-sizing: border-box;
-  border-radius: 8px;
-  color: white;
-  padding-right: 10px;
-}
-
-header img {
-  width: 100px;
-  height: 55px;
-  margin-right: 10px;
-}
-
-header h1 {
-  margin: 0;
-  line-height: 55px;
 }
